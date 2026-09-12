@@ -1,0 +1,1 @@
+{"expected_assertion_count":1,"must_contain_memory_type":["PREFERENCE"],"must_not_contain_text":["User prefers Slack."],"notes":"Atlas contextual restriction must remain represented."}

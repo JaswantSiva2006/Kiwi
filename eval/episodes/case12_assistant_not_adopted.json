@@ -1,0 +1,1 @@
+{"episode_id":"case12_assistant_not_adopted","session_id":"eval","timezone":"Asia/Kolkata","locale":"en-IN","messages":[{"message_id":"m1","role":"ASSISTANT","timestamp":"2026-09-03T09:11:00","text":"Rahul is probably the project lead."},{"message_id":"m2","role":"USER","timestamp":"2026-09-03T09:11:10","text":"Okay."}],"tool_context":null,"grounding_context":null}

@@ -1,0 +1,16 @@
+{
+  "episode_id": "demo_part2",
+  "session_id": "demo",
+  "timezone": "Asia/Kolkata",
+  "locale": "en-IN",
+  "messages": [
+    {
+      "message_id": "m1",
+      "role": "USER",
+      "timestamp": "2026-09-03T09:00:00",
+      "text": "Priya's handling Atlas now because Rohit moved to payments, and we're hoping to ship it around the second week of October."
+    }
+  ],
+  "tool_context": null,
+  "grounding_context": null
+}

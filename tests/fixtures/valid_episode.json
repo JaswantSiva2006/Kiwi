@@ -1,0 +1,28 @@
+{
+  "episode_id": "ep_1",
+  "session_id": null,
+  "timezone": "Asia/Kolkata",
+  "locale": "en-IN",
+  "messages": [
+    {
+      "message_id": "m1",
+      "role": "USER",
+      "timestamp": "2026-09-03T10:14:00",
+      "text": "Priya's basically handling Atlas now."
+    },
+    {
+      "message_id": "m2",
+      "role": "ASSISTANT",
+      "timestamp": "2026-09-03T10:14:20",
+      "text": "Since Rohit moved over to payments?"
+    },
+    {
+      "message_id": "m3",
+      "role": "USER",
+      "timestamp": "2026-09-03T10:15:00",
+      "text": "Yeah. We're hoping to ship it around the second week of October."
+    }
+  ],
+  "tool_context": null,
+  "grounding_context": null
+}

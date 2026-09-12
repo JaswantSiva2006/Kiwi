@@ -1,0 +1,12 @@
+{
+  "total": 1,
+  "passed": 1,
+  "failed": 0,
+  "pass_rate": 1.0,
+  "average_latency_ms": 17845.858400003635,
+  "failed_cases": [],
+  "total_runtime_ms": 17878.210700000636,
+  "current_datetime": "2026-09-12T12:00:00+05:30",
+  "timezone": "Asia/Kolkata",
+  "hey_kivi_max_tokens": 8192
+}

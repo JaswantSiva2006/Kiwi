@@ -1,0 +1,11 @@
+pydantic>=2
+pytest>=8
+httpx>=0.27
+psycopg[binary]
+sentence-transformers
+redis>=5
+python-dotenv>=1
+sarvamai>=0.1.32
+fastapi>=0.115
+uvicorn[standard]>=0.30
+tavily-python>=0.8.2

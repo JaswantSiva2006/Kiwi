@@ -1,0 +1,238 @@
+[
+  {
+    "case_id": 1,
+    "query": "Who leads Helios now, and what is Arjun's role?",
+    "expected_behavior": "Return current Helios lead and Arjun's actual/current role; avoid stale superseded owner facts.",
+    "actual_answer": "I don't have any information about who leads Helios or what Arjun's role is based on my current context. If you can share more details or ask me to look something up, I'd be happy to help!",
+    "tools_called": [
+      "semantic_memory.search"
+    ],
+    "tool_calls": [
+      {
+        "tool": "semantic_memory.search",
+        "arguments": {
+          "query": "Helios leader current Arjun role"
+        }
+      }
+    ],
+    "retrieved_memories": [
+      {
+        "arguments": [
+          {
+            "entity_id": "8c2760f8-72e1-4cca-ae21-74d4951bdbb6",
+            "entity_type": "project",
+            "is_entity": true,
+            "memory_id": "a495a844-2b4e-4e04-9730-c65ae6b6d3b8",
+            "position": 0,
+            "role": "project",
+            "text": "Atlas"
+          }
+        ],
+        "canonical_text": "Priya is working on Atlas this month.",
+        "created_at": "2026-09-12T14:46:37.310644+00:00",
+        "evidence": [
+          {
+            "episode_id": "corpus-rec-0001",
+            "memory_id": "a495a844-2b4e-4e04-9730-c65ae6b6d3b8",
+            "message_id": "corpus-rec-0001-user",
+            "observed_at": "2026-01-05T03:04:00+00:00",
+            "source_text": "Priya is working on Atlas this month."
+          }
+        ],
+        "label": "M1",
+        "memory_id": "a495a844-2b4e-4e04-9730-c65ae6b6d3b8",
+        "predicate_type": "WORKING_ON",
+        "subject": {
+          "entity_id": "d512a310-4f2e-4230-9cc7-f3c893139934",
+          "entity_type": "person",
+          "text": "Priya"
+        },
+        "temporal": {
+          "event_time": null,
+          "recurrence": "NONE",
+          "recurrence_specifics": null,
+          "temporal_kind": "STATE_INTERVAL",
+          "temporal_precision": "MONTH",
+          "valid_from": null,
+          "valid_to": null
+        }
+      },
+      {
+        "arguments": [
+          {
+            "entity_id": null,
+            "entity_type": null,
+            "is_entity": false,
+            "memory_id": "aa02a98e-0449-4bd8-ae6b-4758972b2514",
+            "position": 0,
+            "role": "target",
+            "text": "pull requests"
+          }
+        ],
+        "canonical_text": "The user usually reviews pull requests after lunch.",
+        "created_at": "2026-09-12T14:47:31.423629+00:00",
+        "evidence": [
+          {
+            "episode_id": "corpus-rec-0003",
+            "memory_id": "aa02a98e-0449-4bd8-ae6b-4758972b2514",
+            "message_id": "corpus-rec-0003-user",
+            "observed_at": "2026-01-05T03:46:00+00:00",
+            "source_text": "I usually review pull requests after lunch."
+          }
+        ],
+        "label": "M2",
+        "memory_id": "aa02a98e-0449-4bd8-ae6b-4758972b2514",
+        "predicate_type": "REVIEW_PULL_REQUESTS_AFTER_LUNCH",
+        "subject": {
+          "entity_id": null,
+          "entity_type": "PERSON",
+          "text": "user"
+        },
+        "temporal": {
+          "event_time": null,
+          "recurrence": "WEEKLY",
+          "recurrence_specifics": "AFTER LUNCH",
+          "temporal_kind": "RECURRENCE",
+          "temporal_precision": "DAY",
+          "valid_from": null,
+          "valid_to": null
+        }
+      },
+      {
+        "arguments": [
+          {
+            "entity_id": null,
+            "entity_type": null,
+            "is_entity": false,
+            "memory_id": "321bac79-604f-43b4-ad34-6d2513dceb3d",
+            "position": 0,
+            "role": "target_activity",
+            "text": "design reviews"
+          },
+          {
+            "entity_id": null,
+            "entity_type": null,
+            "is_entity": false,
+            "memory_id": "321bac79-604f-43b4-ad34-6d2513dceb3d",
+            "position": 1,
+            "role": "preferred_time",
+            "text": "in the morning"
+          }
+        ],
+        "canonical_text": "The user prefers design reviews in the morning.",
+        "created_at": "2026-09-12T14:47:04.047132+00:00",
+        "evidence": [
+          {
+            "episode_id": "corpus-rec-0002",
+            "memory_id": "321bac79-604f-43b4-ad34-6d2513dceb3d",
+            "message_id": "corpus-rec-0002-user",
+            "observed_at": "2026-01-05T03:34:00+00:00",
+            "source_text": "I like design reviews in the morning."
+          }
+        ],
+        "label": "M3",
+        "memory_id": "321bac79-604f-43b4-ad34-6d2513dceb3d",
+        "predicate_type": "PREFERS_TIME",
+        "subject": {
+          "entity_id": "8d676931-1e68-4a73-a89e-f49d21f6b304",
+          "entity_type": "PERSON",
+          "text": "the user"
+        },
+        "temporal": {
+          "event_time": null,
+          "recurrence": "NONE",
+          "recurrence_specifics": null,
+          "temporal_kind": "NONE",
+          "temporal_precision": "NONE",
+          "valid_from": null,
+          "valid_to": null
+        }
+      }
+    ],
+    "calendar_events": [],
+    "provenance_source_record_ids": [
+      "rec-0001",
+      "rec-0002",
+      "rec-0003"
+    ],
+    "ledger_state": [
+      {
+        "memory_id": "aa02a98e-0449-4bd8-ae6b-4758972b2514",
+        "canonical_text": "The user usually reviews pull requests after lunch.",
+        "memory_type": "HABIT_ROUTINE",
+        "predicate_type": "REVIEW_PULL_REQUESTS_AFTER_LUNCH",
+        "status": "ACTIVE",
+        "version": 1,
+        "created_at": "2026-09-12 14:47:31.423629+00:00",
+        "updated_at": "2026-09-12 14:47:31.423629+00:00",
+        "temporal_kind": "RECURRENCE",
+        "recurrence": "WEEKLY",
+        "recurrence_specifics": "AFTER LUNCH",
+        "source_episode_ids": [
+          "corpus-rec-0003"
+        ],
+        "ledger_events": [
+          "MEMORY_ADDED"
+        ]
+      },
+      {
+        "memory_id": "321bac79-604f-43b4-ad34-6d2513dceb3d",
+        "canonical_text": "The user prefers design reviews in the morning.",
+        "memory_type": "PREFERENCE",
+        "predicate_type": "PREFERS_TIME",
+        "status": "ACTIVE",
+        "version": 1,
+        "created_at": "2026-09-12 14:47:04.047132+00:00",
+        "updated_at": "2026-09-12 14:47:04.047132+00:00",
+        "temporal_kind": "NONE",
+        "recurrence": "NONE",
+        "recurrence_specifics": null,
+        "source_episode_ids": [
+          "corpus-rec-0002"
+        ],
+        "ledger_events": [
+          "MEMORY_ADDED"
+        ]
+      },
+      {
+        "memory_id": "a495a844-2b4e-4e04-9730-c65ae6b6d3b8",
+        "canonical_text": "Priya is working on Atlas this month.",
+        "memory_type": "PROJECT_GOAL_TOPIC",
+        "predicate_type": "WORKING_ON",
+        "status": "ACTIVE",
+        "version": 1,
+        "created_at": "2026-09-12 14:46:37.310644+00:00",
+        "updated_at": "2026-09-12 14:46:37.310644+00:00",
+        "temporal_kind": "STATE_INTERVAL",
+        "recurrence": "NONE",
+        "recurrence_specifics": null,
+        "source_episode_ids": [
+          "corpus-rec-0001"
+        ],
+        "ledger_events": [
+          "MEMORY_ADDED"
+        ]
+      }
+    ],
+    "latency_ms": 17845.858400003635,
+    "diagnostics": {
+      "redis_context_ms": 13.73079999757465,
+      "router_ms": 3021.296999999322,
+      "router_llm_ms": 3020.9326000040164,
+      "router_model_call_count": 1,
+      "router_fallback_used": false,
+      "semantic_retrieval_ms": 10831.379999995988,
+      "calendar_retrieval_ms": 0.0,
+      "redis_history_retrieval_ms": 0.0,
+      "web_search_ms": 0.0,
+      "tool_call_count": 1,
+      "context_builder_ms": 0.17829999706009403,
+      "final_answer_ms": 3973.764199996367,
+      "redis_append_ms": 4.838499997276813,
+      "total_ms": 17845.806000004814
+    },
+    "pass": true,
+    "failure_reason": null,
+    "error": null
+  }
+]

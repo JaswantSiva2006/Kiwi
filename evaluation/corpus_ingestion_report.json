@@ -1,0 +1,204 @@
+{
+  "complete": true,
+  "input": "C:\\Users\\fiitj\\Kiwi\\data\\kivi_dev_corpus_500.jsonl",
+  "converted_output": "C:\\Users\\fiitj\\Kiwi\\evaluation\\converted_memory_episodes.jsonl",
+  "report_path": "C:\\Users\\fiitj\\Kiwi\\evaluation\\corpus_ingestion_report.json",
+  "summary": {
+    "processed": 3,
+    "successful": 3,
+    "failed": 0,
+    "operations": {
+      "ADD": 3,
+      "REINFORCE": 0,
+      "SUPERSEDE": 0,
+      "RETRACT": 0
+    },
+    "total_runtime_seconds": 105.2277,
+    "average_latency_seconds": 35.0703
+  },
+  "records": [
+    {
+      "source_index": 1,
+      "record_id": "rec_0001",
+      "memory_episode_id": "corpus-rec-0001",
+      "success": true,
+      "assertion_count": 1,
+      "reconciliation_operations": {
+        "ADD": 1,
+        "REINFORCE": 0,
+        "SUPERSEDE": 0,
+        "RETRACT": 0
+      },
+      "memory_ids": [
+        "a495a844-2b4e-4e04-9730-c65ae6b6d3b8"
+      ],
+      "latency_seconds": 51.1031,
+      "error": null,
+      "assertions": [
+        {
+          "index": 0,
+          "canonical_text": "Priya is working on Atlas this month.",
+          "memory_type": "PROJECT_GOAL_TOPIC",
+          "predicate_type": "WORKING_ON",
+          "reconciliation_op": "ADD",
+          "executed": true,
+          "created_memory_id": "a495a844-2b4e-4e04-9730-c65ae6b6d3b8",
+          "target_memory_ids": [],
+          "affected_memory_ids": [
+            "a495a844-2b4e-4e04-9730-c65ae6b6d3b8"
+          ],
+          "source_spans": [
+            {
+              "message_id": "corpus-rec-0001-user",
+              "text": "Priya is working on Atlas this month."
+            }
+          ],
+          "provenance_source_ids": [
+            "rec-0001"
+          ],
+          "errors": []
+        }
+      ],
+      "provenance_source_ids": [
+        "rec-0001"
+      ],
+      "model_usage": {
+        "semantic_compiler_model": "qwen3.5:9b",
+        "semantic_compiler_think": true,
+        "temporal_reasoning_model": "qwen3.5:9b",
+        "temporal_normalization_model": "qwen3.5:9b",
+        "pipeline_model_fields": {
+          "semantic_compiler": "qwen3.5:9b",
+          "semantic_compiler_think": true,
+          "temporal_reasoning": "qwen3.5:9b",
+          "temporal_normalization": "qwen3.5:9b",
+          "reconciliation": "qwen3.5:9b",
+          "sensitivity": null
+        }
+      },
+      "pipeline_errors": []
+    },
+    {
+      "source_index": 2,
+      "record_id": "rec_0002",
+      "memory_episode_id": "corpus-rec-0002",
+      "success": true,
+      "assertion_count": 1,
+      "reconciliation_operations": {
+        "ADD": 1,
+        "REINFORCE": 0,
+        "SUPERSEDE": 0,
+        "RETRACT": 0
+      },
+      "memory_ids": [
+        "321bac79-604f-43b4-ad34-6d2513dceb3d"
+      ],
+      "latency_seconds": 26.7779,
+      "error": null,
+      "assertions": [
+        {
+          "index": 0,
+          "canonical_text": "The user prefers design reviews in the morning.",
+          "memory_type": "PREFERENCE",
+          "predicate_type": "PREFERS_TIME",
+          "reconciliation_op": "ADD",
+          "executed": true,
+          "created_memory_id": "321bac79-604f-43b4-ad34-6d2513dceb3d",
+          "target_memory_ids": [],
+          "affected_memory_ids": [
+            "321bac79-604f-43b4-ad34-6d2513dceb3d"
+          ],
+          "source_spans": [
+            {
+              "message_id": "corpus-rec-0002-user",
+              "text": "I like design reviews in the morning."
+            }
+          ],
+          "provenance_source_ids": [
+            "rec-0002"
+          ],
+          "errors": []
+        }
+      ],
+      "provenance_source_ids": [
+        "rec-0002"
+      ],
+      "model_usage": {
+        "semantic_compiler_model": "qwen3.5:9b",
+        "semantic_compiler_think": true,
+        "temporal_reasoning_model": "qwen3.5:9b",
+        "temporal_normalization_model": "qwen3.5:9b",
+        "pipeline_model_fields": {
+          "semantic_compiler": "qwen3.5:9b",
+          "semantic_compiler_think": true,
+          "temporal_reasoning": "qwen3.5:9b",
+          "temporal_normalization": "qwen3.5:9b",
+          "reconciliation": "qwen3.5:9b",
+          "sensitivity": null
+        }
+      },
+      "pipeline_errors": []
+    },
+    {
+      "source_index": 3,
+      "record_id": "rec_0003",
+      "memory_episode_id": "corpus-rec-0003",
+      "success": true,
+      "assertion_count": 1,
+      "reconciliation_operations": {
+        "ADD": 1,
+        "REINFORCE": 0,
+        "SUPERSEDE": 0,
+        "RETRACT": 0
+      },
+      "memory_ids": [
+        "aa02a98e-0449-4bd8-ae6b-4758972b2514"
+      ],
+      "latency_seconds": 27.3298,
+      "error": null,
+      "assertions": [
+        {
+          "index": 0,
+          "canonical_text": "The user usually reviews pull requests after lunch.",
+          "memory_type": "HABIT_ROUTINE",
+          "predicate_type": "REVIEW_PULL_REQUESTS_AFTER_LUNCH",
+          "reconciliation_op": "ADD",
+          "executed": true,
+          "created_memory_id": "aa02a98e-0449-4bd8-ae6b-4758972b2514",
+          "target_memory_ids": [],
+          "affected_memory_ids": [
+            "aa02a98e-0449-4bd8-ae6b-4758972b2514"
+          ],
+          "source_spans": [
+            {
+              "message_id": "corpus-rec-0003-user",
+              "text": "I usually review pull requests after lunch."
+            }
+          ],
+          "provenance_source_ids": [
+            "rec-0003"
+          ],
+          "errors": []
+        }
+      ],
+      "provenance_source_ids": [
+        "rec-0003"
+      ],
+      "model_usage": {
+        "semantic_compiler_model": "qwen3.5:9b",
+        "semantic_compiler_think": true,
+        "temporal_reasoning_model": "qwen3.5:9b",
+        "temporal_normalization_model": "qwen3.5:9b",
+        "pipeline_model_fields": {
+          "semantic_compiler": "qwen3.5:9b",
+          "semantic_compiler_think": true,
+          "temporal_reasoning": "qwen3.5:9b",
+          "temporal_normalization": "qwen3.5:9b",
+          "reconciliation": "qwen3.5:9b",
+          "sensitivity": null
+        }
+      },
+      "pipeline_errors": []
+    }
+  ]
+}

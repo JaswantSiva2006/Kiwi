@@ -1,0 +1,1 @@
+{"expected_assertion_count":1,"must_not_contain_text":["User is going to apply to Stanford"],"notes":"Must not convert Rahul's belief into established user intention."}

@@ -1,0 +1,1 @@
+{"expected_assertion_count":1,"must_not_contain_text":["User works at Amazon"],"notes":"Must preserve negation."}

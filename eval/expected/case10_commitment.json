@@ -1,0 +1,1 @@
+{"expected_assertion_count":1,"must_contain_memory_type":["COMMITMENT_OPEN_LOOP"],"notes":"Should identify a commitment/open loop."}

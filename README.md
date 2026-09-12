@@ -6,8 +6,8 @@ This repo is a local prototype with a FastAPI backend, Vite/React frontend, Post
 
 ## Product Documents
 
-- [Product Positioning](./PRODUCT_POSITIONING.md)
-- [Product Vision](./PRODUCT_VISION.md)
+- [Product Positioning](./product_positioning.md)
+- [Product Vision](./product_vision.md)
 
 ## Core Capabilities
 

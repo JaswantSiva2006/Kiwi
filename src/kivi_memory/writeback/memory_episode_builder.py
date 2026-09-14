@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 from dataclasses import dataclass
+from datetime import datetime, timezone
 
 from kivi_memory.common.schemas import MemoryEpisode
 from kivi_memory.working_memory import ThreadEpisodeEntry
@@ -40,6 +41,7 @@ class MemoryEpisodeBuilder:
         messages = []
         target_user_message_ids: list[str] = []
         context_only_message_ids: list[str] = []
+        sequence = 0
         for entry in selected:
             context_only = entry.stream_id not in target_ids
             for message in entry.episode.messages:
@@ -59,8 +61,13 @@ class MemoryEpisodeBuilder:
                         "context_only": message_context_only,
                         "source_thread_episode_id": entry.episode.episode_id,
                         "source_stream_id": entry.stream_id,
+                        "_sequence": sequence,
                     }
                 )
+                sequence += 1
+        messages.sort(key=lambda item: (_timestamp_key(item["timestamp"]), item["_sequence"]))
+        for message in messages:
+            message.pop("_sequence", None)
 
         tool_context = [
             {
@@ -108,3 +115,10 @@ def _entry_index(entries: list[ThreadEpisodeEntry], stream_id: str) -> int:
         if entry.stream_id == stream_id:
             return index
     raise ValueError(f"stream_id {stream_id} is not present in all_entries")
+
+
+def _timestamp_key(value: str) -> float:
+    parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    if parsed.tzinfo is None or parsed.utcoffset() is None:
+        parsed = parsed.replace(tzinfo=timezone.utc)
+    return parsed.timestamp()

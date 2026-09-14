@@ -9,27 +9,14 @@ from datetime import datetime, timedelta
 from typing import Any, Callable, Protocol
 from uuid import uuid4
 
-from kivi_memory.calendar import CalendarTool
 from kivi_memory.common.config import DEFAULT_LOCALE, KiviOrchestratorConfig, load_orchestrator_config_from_env
-from kivi_memory.llm_redis_orchestrator.final_agent import (
-    SarvamFinalAnswerError,
-    _extract_final_answer_text,
-    get_shared_sarvam_client,
-)
-from kivi_memory.long_term_retrieval import RetrievalResult, retrieve_long_term_memories
-from kivi_memory.read_orchestrator import (
-    ReadOrchestrationResult,
-    ReadSideOrchestrator,
-    ReadToolDecision,
-    RedisThreadHistoryTool,
-    RouterToolCall,
-    ToolExecutionResult,
-    WebSearchTool,
-    build_context,
-)
-from kivi_memory.read_orchestrator.memory_control import MemoryControlTool
+from kivi_memory.document_rag.search_tool import DocumentProbe, DocumentSearchTool
+from kivi_memory.read_orchestrator.context_builder import build_context
+from kivi_memory.read_orchestrator.models import ReadOrchestrationResult, ReadToolDecision, RouterToolCall, ToolExecutionResult
+from kivi_memory.read_orchestrator.orchestrator import ReadSideOrchestrator
+from kivi_memory.read_orchestrator.redis_history import RedisThreadHistoryTool
+from kivi_memory.read_orchestrator.web_search import WebSearchTool
 from kivi_memory.working_memory import ThreadEpisode, ThreadEpisodeBuilder, ThreadEpisodeStore
-from kivi_memory.writeback.worker import MemoryWritebackWorker, WritebackStatus
 
 READ_RESPONSE_SYSTEM_PROMPT = """You are Kivi, the user's intelligent personal assistant.
 
@@ -69,6 +56,11 @@ WEB_CONTEXT
 - For current or factual claims derived from WEB_CONTEXT, preserve source attribution using the supplied [W#] identifiers where useful.
 - Do not assume every web result is relevant.
 - When WEB_CONTEXT and Kivi's personal context are both relevant, reason across them naturally to answer the user's actual question.
+
+DOCUMENT_CONTEXT
+- Document chunks are candidate source evidence.
+- Use only relevant evidence, ignore unrelated chunks, do not invent facts absent from the provided context, and reference [D1], [D2], etc. when useful.
+- Preserve page, section, and file provenance when it helps answer clearly.
 
 MEMORY_CONTROL
 - The result of an explicit user request to inspect, explain, correct, remove, forget, or change Kivi's stored memory.
@@ -165,11 +157,15 @@ class QueryResponse:
 class LongTermSemanticMemoryRetriever:
     """Small read-only adapter around the existing long-term retrieval stack."""
 
-    def __init__(self, top_k: int = 12, retrieval_function: Callable[..., RetrievalResult] = retrieve_long_term_memories) -> None:
+    def __init__(self, top_k: int = 12, retrieval_function: Callable[..., Any] | None = None) -> None:
         self.top_k = top_k
         self.retrieval_function = retrieval_function
 
     def search(self, *, query: str) -> list[Any]:
+        if self.retrieval_function is None:
+            from kivi_memory.long_term_retrieval import retrieve_long_term_memories
+
+            self.retrieval_function = retrieve_long_term_memories
         result = self.retrieval_function(query_text=query, top_k=self.top_k)
         return list(result.memories)
 
@@ -182,6 +178,8 @@ class SarvamReadResponseClient:
         self.client = client
 
     def answer(self, *, system_prompt: str, context: str) -> str:
+        from kivi_memory.llm_redis_orchestrator.final_agent import SarvamFinalAnswerError, _extract_final_answer_text
+
         response = self._request(system_prompt=system_prompt, context=context)
         text = _extract_final_answer_text(response)
         if isinstance(text, str) and text.strip() and not _looks_truncated_answer(text):
@@ -200,6 +198,8 @@ class SarvamReadResponseClient:
         return text.strip()
 
     def _request(self, *, system_prompt: str, context: str) -> Any:
+        from kivi_memory.llm_redis_orchestrator.final_agent import SarvamFinalAnswerError, get_shared_sarvam_client
+
         try:
             client = self.client or get_shared_sarvam_client(self.config)
             return client.chat.completions(
@@ -228,10 +228,11 @@ class ReadResponseService:
         episode_store: ThreadEpisodeStore | None = None,
         router: ReadSideOrchestrator | None = None,
         semantic_retriever: SemanticMemoryRetriever | None = None,
-        calendar_tool: CalendarTool | None = None,
+        calendar_tool: Any | None = None,
         redis_history_tool: RedisThreadHistoryTool | None = None,
         web_search_tool: WebSearchTool | None = None,
-        memory_control_tool: MemoryControlTool | None = None,
+        document_search_tool: DocumentSearchTool | None = None,
+        memory_control_tool: Any | None = None,
         final_answer_client: FinalAnswerClient | None = None,
         episode_builder: ThreadEpisodeBuilder | None = None,
         config: KiviOrchestratorConfig | None = None,
@@ -240,10 +241,11 @@ class ReadResponseService:
         self.episode_store = episode_store or ThreadEpisodeStore()
         self.router = router or ReadSideOrchestrator(config=self.config)
         self.semantic_retriever = semantic_retriever or LongTermSemanticMemoryRetriever(top_k=self.config.agent_max_memories)
-        self.calendar_tool = calendar_tool or CalendarTool()
+        self.calendar_tool = calendar_tool
         self.redis_history_tool = redis_history_tool or RedisThreadHistoryTool(episode_store=self.episode_store)
         self.web_search_tool = web_search_tool or WebSearchTool()
-        self.memory_control_tool = memory_control_tool or MemoryControlTool()
+        self.document_search_tool = document_search_tool or DocumentSearchTool()
+        self.memory_control_tool = memory_control_tool
         self.final_answer_client = final_answer_client or SarvamReadResponseClient(config=self.config)
         self.episode_builder = episode_builder or ThreadEpisodeBuilder()
 
@@ -255,6 +257,8 @@ class ReadResponseService:
         current_datetime: datetime,
         timezone: str,
         locale: str = DEFAULT_LOCALE,
+        force_document_search: bool = False,
+        document_ids: list[str] | None = None,
         event_callback: ReadResponseEventCallback | None = None,
     ) -> QueryResponse:
         if not user_query.strip():
@@ -265,6 +269,8 @@ class ReadResponseService:
         thread_context = await asyncio.to_thread(self.episode_store.load_recent_thread_context, thread_id)
         redis_context_ms = _elapsed_ms(redis_started)
 
+        document_probe = await asyncio.to_thread(self.document_search_tool.probe, user_query)
+
         router_started = time.perf_counter()
         route_result = await asyncio.to_thread(
             self.router.route,
@@ -272,9 +278,16 @@ class ReadResponseService:
             thread_context,
             current_datetime=current_datetime,
             user_timezone=timezone,
+            document_probe=document_probe.metadata,
         )
         router_ms = _elapsed_ms(router_started)
-        route = _apply_tool_fallbacks(route_result.decision, user_query, current_datetime)
+        route = _apply_tool_fallbacks(
+            route_result.decision,
+            user_query,
+            current_datetime,
+            force_document_search=force_document_search,
+            document_ids=document_ids or [],
+        )
         tool_results = await self._execute_tool_calls(
             route.tool_calls,
             thread_id=thread_id,
@@ -283,6 +296,7 @@ class ReadResponseService:
             timezone=timezone,
             locale=locale,
             event_callback=event_callback,
+            document_probe=document_probe,
         )
 
         context_started = time.perf_counter()
@@ -333,6 +347,9 @@ class ReadResponseService:
 
                 trigger_writeback_check(thread_id, now=current_datetime)
             else:
+                from kivi_memory.writeback.worker import MemoryWritebackWorker, WritebackStatus
+
+                _emit_event(event_callback, "memory_syncing")
                 writeback_result = await asyncio.to_thread(MemoryWritebackWorker().process_thread_once, thread_id, now=current_datetime)
                 if writeback_result.status == WritebackStatus.SUCCESS:
                     _emit_event(
@@ -360,6 +377,8 @@ class ReadResponseService:
                 "calendar_retrieval_ms": _tool_latency(tool_results, "calendar.get_schedule"),
                 "redis_history_retrieval_ms": _tool_latency(tool_results, "redis_thread_history.search"),
                 "web_search_ms": _tool_latency(tool_results, "web.search"),
+                "document_probe_ms": document_probe.latency_ms,
+                "document_search_ms": _tool_latency(tool_results, "document.search"),
                 "tool_call_count": len(tool_results),
                 "context_builder_ms": context_ms,
                 "final_answer_ms": final_ms,
@@ -386,6 +405,7 @@ class ReadResponseService:
         timezone: str,
         locale: str,
         event_callback: ReadResponseEventCallback | None = None,
+        document_probe: DocumentProbe | None = None,
     ) -> list[ToolExecutionResult]:
         calls = _ensure_semantic_grounding(calls, user_query)
         tasks = [
@@ -397,6 +417,7 @@ class ReadResponseService:
                 current_datetime=current_datetime,
                 timezone=timezone,
                 locale=locale,
+                document_probe=document_probe,
             )
             for call in calls
         ]
@@ -422,12 +443,17 @@ class ReadResponseService:
         current_datetime: datetime,
         timezone: str,
         locale: str,
+        document_probe: DocumentProbe | None = None,
     ) -> ToolExecutionResult:
         started = time.perf_counter()
         arguments = dict(call.arguments or {})
         if call.tool == "semantic_memory.search":
             result = self.semantic_retriever.search(query=arguments.get("query") or user_query)
         elif call.tool == "calendar.get_schedule":
+            if self.calendar_tool is None:
+                from kivi_memory.calendar.tool import CalendarTool
+
+                self.calendar_tool = CalendarTool()
             result = self.calendar_tool.get_schedule(_parse_datetime(arguments["start"]), _parse_datetime(arguments["end"]))
         elif call.tool == "redis_thread_history.search":
             result = self.redis_history_tool.search(
@@ -442,7 +468,24 @@ class ReadResponseService:
                 query=arguments.get("query") or user_query,
                 freshness=arguments.get("freshness") or "none",
             )
+        elif call.tool == "document.search":
+            query = arguments.get("query") or user_query
+            reusable_embedding = (
+                document_probe.query_embedding
+                if document_probe is not None and document_probe.query == query
+                else None
+            )
+            result = self.document_search_tool.search(
+                query=query,
+                top_k=int(arguments.get("top_k") or 6),
+                document_ids=arguments.get("document_ids") or [],
+                query_embedding=reusable_embedding,
+            )
         elif call.tool == "memory.control":
+            if self.memory_control_tool is None:
+                from kivi_memory.read_orchestrator.memory_control import MemoryControlTool
+
+                self.memory_control_tool = MemoryControlTool()
             result = self.memory_control_tool.execute(
                 query=arguments.get("query") or user_query,
                 thread_id=thread_id,
@@ -467,6 +510,8 @@ async def handle_user_query(
     current_datetime: datetime,
     timezone: str,
     locale: str = DEFAULT_LOCALE,
+    force_document_search: bool = False,
+    document_ids: list[str] | None = None,
     service: ReadResponseService | None = None,
 ) -> QueryResponse:
     return await (service or ReadResponseService()).handle_user_query(
@@ -475,6 +520,8 @@ async def handle_user_query(
         current_datetime=current_datetime,
         timezone=timezone,
         locale=locale,
+        force_document_search=force_document_search,
+        document_ids=document_ids or [],
     )
 
 
@@ -549,6 +596,7 @@ def _tool_activity_label(tool_names: list[str]) -> str:
         "calendar.get_schedule": "Accessing calendar...",
         "redis_thread_history.search": "Checking earlier conversation...",
         "web.search": "Searching the web...",
+        "document.search": "Searching documents...",
         "memory.control": "Updating memory...",
     }
     unique = [name for index, name in enumerate(tool_names) if name and name not in tool_names[:index]]
@@ -562,7 +610,10 @@ def _ensure_semantic_grounding(calls, user_query: str):
     if not call_list:
         return call_list
     has_semantic = any(getattr(call, "tool", None) == "semantic_memory.search" for call in call_list)
-    has_other_tool = any(getattr(call, "tool", None) != "semantic_memory.search" for call in call_list)
+    has_other_tool = any(
+        getattr(call, "tool", None) not in {"semantic_memory.search", "document.search"}
+        for call in call_list
+    )
     if has_semantic or not has_other_tool:
         return call_list
     return [
@@ -571,8 +622,22 @@ def _ensure_semantic_grounding(calls, user_query: str):
     ]
 
 
-def _apply_tool_fallbacks(route: Any, user_query: str, current_datetime: datetime) -> Any:
+def _apply_tool_fallbacks(
+    route: Any,
+    user_query: str,
+    current_datetime: datetime,
+    *,
+    force_document_search: bool = False,
+    document_ids: list[str] | None = None,
+) -> Any:
     calls = list(getattr(route, "tool_calls", None) or [])
+    if force_document_search and not any(call.tool == "document.search" for call in calls):
+        calls.append(
+            RouterToolCall(
+                tool="document.search",
+                arguments={"query": user_query, "top_k": 6, "document_ids": document_ids or []},
+            )
+        )
     if not calls and _looks_like_memory_question(user_query):
         calls.append(RouterToolCall(tool="semantic_memory.search", arguments={"query": user_query}))
     if _looks_like_calendar_question(user_query) and not any(call.tool == "calendar.get_schedule" for call in calls):
@@ -586,6 +651,8 @@ def _apply_tool_fallbacks(route: Any, user_query: str, current_datetime: datetim
                 },
             )
         )
+    if _looks_like_document_question(user_query) and not any(call.tool == "document.search" for call in calls):
+        calls.append(RouterToolCall(tool="document.search", arguments={"query": user_query, "top_k": 6, "document_ids": []}))
     if not calls:
         return route
     return ReadToolDecision(tool_calls=calls)
@@ -626,6 +693,11 @@ def _looks_like_calendar_question(query: str) -> bool:
             "when is",
         )
     )
+
+
+def _looks_like_document_question(query: str) -> bool:
+    lowered = query.casefold()
+    return any(marker in lowered for marker in ("indexed paper", "indexed document", "this paper", "this pdf", "the pdf", "document", "report", "specification"))
 
 
 def _calendar_window_for_query(query: str, current_datetime: datetime) -> tuple[datetime, datetime]:

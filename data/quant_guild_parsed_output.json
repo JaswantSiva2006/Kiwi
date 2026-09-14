@@ -1,0 +1,972 @@
+{
+  "document": {
+    "document_id": "c49c822ba21b8ffe",
+    "filename": "Quant_Guild_Application_UPDATE.pdf",
+    "sha256": "6c92c6af43000db9d907214e902fba7f6e4c7718bd4c72cea7b509875926b620",
+    "page_count": 11,
+    "parser": "pymupdf",
+    "parse_status": "OK"
+  },
+  "chunks": [
+    {
+      "chunk_id": "c49c822ba21b8ffe:chunk:00000",
+      "document_id": "c49c822ba21b8ffe",
+      "chunk_index": 0,
+      "chunk_type": "TEXT",
+      "text": "You will program a trading bot that competes against other bots in a multi-round auction. Each round your bot is given a private value and must decide how much to bid. The objective is to maximise profit over the full game across changing market conditions and changing bankrolls.\n\nThe competition runs over four auction variations , which differ only in how payoffs are assigned once the bids come in. Variations 1 and 2 were released at the orientation session on 09/09; Variations 3 and 4 are released now, alongside the Mock Auction 1 results . Everything else in this document, the game mechanics, the observations, the scoring and the tournament structure, is identical across all four.\n\nBots are submitted on the competition site, quantguildiitm.in , from the /submit page, after signing in with your @smail.iitm.ac.in Google account.\n\nPlease read this document in full. Post any questions on the guild WhatsApp group and we will respond as soon as we can.",
+      "section_title": "1 Overview",
+      "section_path": [
+        "1 Overview"
+      ],
+      "page_start": 1,
+      "page_end": 1,
+      "source_blocks": [
+        "p1:b0003",
+        "p1:b0004",
+        "p1:b0005",
+        "p1:b0006"
+      ],
+      "token_count": 160,
+      "previous_chunk_id": null,
+      "next_chunk_id": "c49c822ba21b8ffe:chunk:00001",
+      "metadata": {
+        "filename": "Quant_Guild_Application_UPDATE.pdf",
+        "mime_type": "application/pdf"
+      }
+    },
+    {
+      "chunk_id": "c49c822ba21b8ffe:chunk:00001",
+      "document_id": "c49c822ba21b8ffe",
+      "chunk_index": 1,
+      "chunk_type": "TEXT",
+      "text": "All times IST, dates in DD/MM.",
+      "section_title": "2 Timeline",
+      "section_path": [
+        "2 Timeline"
+      ],
+      "page_start": 1,
+      "page_end": 1,
+      "source_blocks": [
+        "p1:b0008"
+      ],
+      "token_count": 6,
+      "previous_chunk_id": "c49c822ba21b8ffe:chunk:00000",
+      "next_chunk_id": "c49c822ba21b8ffe:chunk:00002",
+      "metadata": {
+        "filename": "Quant_Guild_Application_UPDATE.pdf",
+        "mime_type": "application/pdf"
+      }
+    },
+    {
+      "chunk_id": "c49c822ba21b8ffe:chunk:00002",
+      "document_id": "c49c822ba21b8ffe",
+      "chunk_index": 2,
+      "chunk_type": "TEXT",
+      "text": "Wed 09/09, 10:00 pm Orientation. Variations 1 and 2 released with starter code.\n\nSat 12/09, 12:00 pm Deadline for mock submissions of Variations 1 and 2 (op- tional, strongly recommended). Sat 12/09, evening Mock Auction 1 run on Variations 1 and 2; results shared. Variations 3 and 4 released. Sun 13/09 to Tue 15/09 Mock Auctions 2, 3 and 4 , one each night at EOD, on all four variations. Results shared after every run. Each run uses your latest accepted submission at that moment. Wed 16/09, 11:59 pm Final submission deadline , all variations.\n\nAfter 16/09 EOD Final evaluation run on the last accepted submission for each variation. Final leaderboards published.\n\nFour mock runs means four chances to see your bot break before it counts. You do not need to re-upload between them — whatever is sitting on the site plays each night — but the whole point is to change something after each one.\n\n1",
+      "section_title": "When What",
+      "section_path": [
+        "2 Timeline",
+        "When What"
+      ],
+      "page_start": 1,
+      "page_end": 1,
+      "source_blocks": [
+        "p1:b0010",
+        "p1:b0011",
+        "p1:b0012",
+        "p1:b0013",
+        "p1:b0014"
+      ],
+      "token_count": 157,
+      "previous_chunk_id": "c49c822ba21b8ffe:chunk:00001",
+      "next_chunk_id": "c49c822ba21b8ffe:chunk:00003",
+      "metadata": {
+        "filename": "Quant_Guild_Application_UPDATE.pdf",
+        "mime_type": "application/pdf"
+      }
+    },
+    {
+      "chunk_id": "c49c822ba21b8ffe:chunk:00003",
+      "document_id": "c49c822ba21b8ffe",
+      "chunk_index": 3,
+      "chunk_type": "TEXT",
+      "text": "• Players: n = 20 bots per auction group. • Rounds: t = 2000, split into 4 blocks of 500 rounds . • Each round, every solvent player i independently draws a value x i from that block’s distri- bution, submits a bid, and receives a payoff determined by the variation in play. • Capital updates as new capital = old capital + payoff.",
+      "section_title": "3.1 Structure",
+      "section_path": [
+        "3 Game Mechanics",
+        "3.1 Structure"
+      ],
+      "page_start": 2,
+      "page_end": 2,
+      "source_blocks": [
+        "p2:b0002"
+      ],
+      "token_count": 64,
+      "previous_chunk_id": "c49c822ba21b8ffe:chunk:00002",
+      "next_chunk_id": "c49c822ba21b8ffe:chunk:00004",
+      "metadata": {
+        "filename": "Quant_Guild_Application_UPDATE.pdf",
+        "mime_type": "application/pdf"
+      }
+    },
+    {
+      "chunk_id": "c49c822ba21b8ffe:chunk:00004",
+      "document_id": "c49c822ba21b8ffe",
+      "chunk_index": 4,
+      "chunk_type": "TEXT",
+      "text": "At the start of every block, the market is re-drawn from scratch. For block b :\n\n1. Draw a minimum m b uniformly from { 100 , 110 , 120 , . . . , 1000 } : multiples of 10, so 91 possible values.\n\n2. Draw a range R b uniformly from { 100 , 200 , 300 , . . . , 1000 } : multiples of 100, so 10 possible values.\n\n3. For every round in that block, values are drawn as x i ∼U [ m b , m b + R b ], independently for each player and each round.\n\nThat gives 91 × 10 = 910 possible blocks. The two grids above are public; the seed is not. Every iteration draws its own schedule of 4 blocks, and all groups within the same iteration play the same schedule — so no group gets an easier market than another in the same iteration.\n\nTwo consequences worth internalising. The minimum is never 0: values always sit on a floor of at least 100, and that floor is a large fraction of the value in a narrow block. And a block like [1000 , 1100] is exactly as likely as [100 , 1100], so knowing the width tells you nothing about the level, and vice versa.\n\nYou are never told m b or R b . Estimating the distribution from what you observe is a core part of the problem.\n\nThe timing , on the other hand, you can work out for yourself. Blocks are exactly 500 rounds long and you receive the round index, so boundaries always fall at rounds 501, 1001 and 1501 and you always know which block you are in. The difficulty is not noticing the change. It is that at each boundary everything you had learned about the market becomes worthless at once, and you have to rebuild an estimate from zero samples while still bidding every round.",
+      "section_title": "3.2 How a block is initialised",
+      "section_path": [
+        "3 Game Mechanics",
+        "3.2 How a block is initialised"
+      ],
+      "page_start": 2,
+      "page_end": 2,
+      "source_blocks": [
+        "p2:b0004",
+        "p2:b0005",
+        "p2:b0006",
+        "p2:b0007",
+        "p2:b0008",
+        "p2:b0009",
+        "p2:b0010",
+        "p2:b0011"
+      ],
+      "token_count": 326,
+      "previous_chunk_id": "c49c822ba21b8ffe:chunk:00003",
+      "next_chunk_id": "c49c822ba21b8ffe:chunk:00005",
+      "metadata": {
+        "filename": "Quant_Guild_Application_UPDATE.pdf",
+        "mime_type": "application/pdf"
+      }
+    },
+    {
+      "chunk_id": "c49c822ba21b8ffe:chunk:00005",
+      "document_id": "c49c822ba21b8ffe",
+      "chunk_index": 5,
+      "chunk_type": "TEXT",
+      "text": "Capital is also re-drawn at every block boundary, independently for each player . For player i in block b :\n\nk i ∼U [0 . 5 , 2 . 5] , C ( b, 0)\n\ni = m b + k i · R b .\n\nSo within the same block some bots start rich and some start poor, and nobody is told anyone else’s capital. Your maximum legal bid is always your current capital. The smallest starting capital the game can produce is 150 ( m b = 100, R b = 100, k i = 0 . 5).",
+      "section_title": "3.3 Starting capital",
+      "section_path": [
+        "3 Game Mechanics",
+        "3.3 Starting capital"
+      ],
+      "page_start": 2,
+      "page_end": 2,
+      "source_blocks": [
+        "p2:b0013",
+        "p2:b0014",
+        "p2:b0015",
+        "p2:b0016"
+      ],
+      "token_count": 100,
+      "previous_chunk_id": "c49c822ba21b8ffe:chunk:00004",
+      "next_chunk_id": "c49c822ba21b8ffe:chunk:00006",
+      "metadata": {
+        "filename": "Quant_Guild_Application_UPDATE.pdf",
+        "mime_type": "application/pdf"
+      }
+    },
+    {
+      "chunk_id": "c49c822ba21b8ffe:chunk:00006",
+      "document_id": "c49c822ba21b8ffe",
+      "chunk_index": 6,
+      "chunk_type": "TEXT",
+      "text": "The capital you finish a block with is banked as score, not as money. It is normalised and converted into leaderboard points (Section 7); the next block then starts from a freshly\n\n2\n\ndrawn capital.\n\nThe reason: varying the starting capital is a test of whether your bot adjusts its aggression to its bankroll, 0 . 5 × the range above the floor is a very different situation from 2 . 5 × . If capital carried over, that test would break. A bot that drew a large bankroll early and compounded it could stay aggressive for the rest of the game purely because it is rich, so the later blocks would be measuring early luck instead of strategy. Resetting makes each block a clean, independent test, and the leaderboard aggregates four of them per iteration.\n\nBankruptcy is likewise per block : a bot is out for the remainder of the block once its capital reaches 0 or below, and returns at the next block boundary with a fresh capital draw.",
+      "section_title": "3.4 Capital does not carry over",
+      "section_path": [
+        "3 Game Mechanics",
+        "3.4 Capital does not carry over"
+      ],
+      "page_start": 2,
+      "page_end": 3,
+      "source_blocks": [
+        "p2:b0018",
+        "p2:b0019",
+        "p3:b0000",
+        "p3:b0001",
+        "p3:b0002"
+      ],
+      "token_count": 171,
+      "previous_chunk_id": "c49c822ba21b8ffe:chunk:00005",
+      "next_chunk_id": "c49c822ba21b8ffe:chunk:00007",
+      "metadata": {
+        "filename": "Quant_Guild_Application_UPDATE.pdf",
+        "mime_type": "application/pdf"
+      }
+    },
+    {
+      "chunk_id": "c49c822ba21b8ffe:chunk:00007",
+      "document_id": "c49c822ba21b8ffe",
+      "chunk_index": 7,
+      "chunk_type": "TEXT",
+      "text": "• Bids may be fractional and must lie in [ 0 , current capital ]. • A bid above your capital, negative, NaN , infinite, not a number at all, or not returned within the time limit counts as a bid of 0 for that round. Over-capital bids are not clamped down to your capital, they are thrown away entirely, so check your own arithmetic. • Ties, Variations 1 and 2: every bid within 10 − 9 of the top bid wins, and each winner receives the full payoff. • Ties, Variations 3 and 4: these variations depend on distinct ranks, so ties are broken uniformly at random .",
+      "section_title": "3.5 Bids",
+      "section_path": [
+        "3 Game Mechanics",
+        "3.5 Bids"
+      ],
+      "page_start": 3,
+      "page_end": 3,
+      "source_blocks": [
+        "p3:b0004"
+      ],
+      "token_count": 109,
+      "previous_chunk_id": "c49c822ba21b8ffe:chunk:00006",
+      "next_chunk_id": "c49c822ba21b8ffe:chunk:00008",
+      "metadata": {
+        "filename": "Quant_Guild_Application_UPDATE.pdf",
+        "mime_type": "application/pdf"
+      }
+    },
+    {
+      "chunk_id": "c49c822ba21b8ffe:chunk:00008",
+      "document_id": "c49c822ba21b8ffe",
+      "chunk_index": 8,
+      "chunk_type": "TEXT",
+      "text": "• A round with fewer than 2 solvent bots is skipped entirely, no values are drawn and no payoffs are assigned. • In Variations 1 and 2, if every bid is 0, all bots are tied at the top and all of them win.",
+      "section_title": "3.6 Edge cases",
+      "section_path": [
+        "3 Game Mechanics",
+        "3.6 Edge cases"
+      ],
+      "page_start": 3,
+      "page_end": 3,
+      "source_blocks": [
+        "p3:b0006"
+      ],
+      "token_count": 44,
+      "previous_chunk_id": "c49c822ba21b8ffe:chunk:00007",
+      "next_chunk_id": "c49c822ba21b8ffe:chunk:00009",
+      "metadata": {
+        "filename": "Quant_Guild_Application_UPDATE.pdf",
+        "mime_type": "application/pdf"
+      }
+    },
+    {
+      "chunk_id": "c49c822ba21b8ffe:chunk:00009",
+      "document_id": "c49c822ba21b8ffe",
+      "chunk_index": 9,
+      "chunk_type": "TEXT",
+      "text": "At the start of each round your bot receives an observation dictionary with exactly the following keys. A tick means the key is present in that variation.",
+      "section_title": "4 Information available to your bot",
+      "section_path": [
+        "4 Information available to your bot"
+      ],
+      "page_start": 3,
+      "page_end": 3,
+      "source_blocks": [
+        "p3:b0008"
+      ],
+      "token_count": 27,
+      "previous_chunk_id": "c49c822ba21b8ffe:chunk:00008",
+      "next_chunk_id": "c49c822ba21b8ffe:chunk:00010",
+      "metadata": {
+        "filename": "Quant_Guild_Application_UPDATE.pdf",
+        "mime_type": "application/pdf"
+      }
+    },
+    {
+      "chunk_id": "c49c822ba21b8ffe:chunk:00010",
+      "document_id": "c49c822ba21b8ffe",
+      "chunk_index": 10,
+      "chunk_type": "TEXT",
+      "text": "Round index, 1–2000 round ✓ ✓ ✓ ✓ Your value this round x ✓ ✓ ✓ ✓ Your current capital capital ✓ ✓ ✓ ✓ Maximum legal bid (= capital) max bid ✓ ✓ ✓ ✓ Solvent bots this round, n t num players ✓ ✓ ✓ ✓ Highest bid last round highest bid last round ✓ ✓ ✓ ✓ Second-highest bid last round second highest bid last round ✓ ✓ ✓ ✓ Your own bid last round my last bid ✓ ✓ ✓ ✓ Your rank last round (1 = won) my last rank ✓ ✓ ✓ ✓ Your payoff last round my last payoff ✓ ✓ ✓ ✓ Realised X of last round max value last round — ✓ ✓ ✓ Top five bids last round, [ b 1 . . . b 5 ] top bids last round — — — ✓\n\nNotes:\n\n• Every “last round” field is 0 in round 1. top bids last round is always a list of five floats, zero-padded if fewer than five bids were placed.\n\n3\n\n• You never learn m b , R b , or any other player’s value, capital or identity. The block index and the boundary rounds you can compute yourself from round . • n t matters because in Variations 2–4 the payoff depends on the maximum value across the solvent players. As bots go bankrupt, n t falls and that maximum falls with it in expectation. • Your bot may keep internal state across rounds (history buffers, estimators, and so on). State persists for the whole 2000 rounds and is not reset at block boundaries, so whatever you learned in the last block is still sitting there at round 501, whether or not it is still true. Clearing it is your job.",
+      "section_title": "Description Key V1 V2 V3 V4",
+      "section_path": [
+        "4 Information available to your bot",
+        "Description Key V1 V2 V3 V4"
+      ],
+      "page_start": 3,
+      "page_end": 4,
+      "source_blocks": [
+        "p3:b0010",
+        "p3:b0011",
+        "p3:b0012",
+        "p3:b0013",
+        "p4:b0000"
+      ],
+      "token_count": 298,
+      "previous_chunk_id": "c49c822ba21b8ffe:chunk:00009",
+      "next_chunk_id": "c49c822ba21b8ffe:chunk:00011",
+      "metadata": {
+        "filename": "Quant_Guild_Application_UPDATE.pdf",
+        "mime_type": "application/pdf"
+      }
+    },
+    {
+      "chunk_id": "c49c822ba21b8ffe:chunk:00011",
+      "document_id": "c49c822ba21b8ffe",
+      "chunk_index": 11,
+      "chunk_type": "TEXT",
+      "text": "Throughout, let b 1 ≥ b 2 ≥ b 3 ≥ . . . be the bids sorted in descending order, and let X = max j x j over the players solvent that round.\n\n1. Variation 1 — private value, first price. The winner receives Payoff = x i − b 1 , where x i is the winner’s own value. Everyone else receives zero.\n\n2. Variation 2 — common value, first price. The winner receives Payoff = X − b 1 . Everyone else receives zero.\n\n3. Variation 3 — runner-up penalty (common value). Rank 1 receives X − b 1 . Rank 2 receives − 0 . 5 ( X − b 1 ), or 0 when X − b 1 < 0 — the runner-up is never charged for the winner’s loss. Everyone else receives zero.\n\n4. Variation 4 — funded second price (common value). If b 1 ≤ X :\n\nPayoff (1) = X − b 2 ,\n\nPayoff (2) = X − b 1 ,\n\nPayoff ( k ) = − s k · T, k ∈{ 3 , 4 , 5 } ,\n\nwhere T = ( X − b 2 ) + ( X − b 1 ) and s 3 = 0 . 5, s 4 = 0 . 3, s 5 = 0 . 2. Ranks 6 and below receive zero, and since the shares sum to 1 the round nets to exactly zero. With fewer than five solvent bots the shares are rescaled over the ranks that do exist; with two solvent bots nobody pays. If b 1 > X : rank 1 alone receives X − b 1 (a loss) and every other player receives zero. No penalties are collected.\n\nReading the four:\n\n• V1 vs V2: in Variation 1 you are bidding on something only you can see. In Variation 2 everyone is bidding on the same prize, and winning it is evidence that you overestimated it. • V3: second place is the only losing seat that actually costs money — everyone from rank 3 down walks away flat. • V4: rank 1 pays b 2 , not b 1 , so the prize is cheaper than it looks; the risk sits entirely in the b 1 > X branch, where the winner eats the loss alone. And ranks 3–5 finish worse off than rank 6 , so there is no safe seat just below the money.\n\n4",
+      "section_title": "5 Auction Variations",
+      "section_path": [
+        "5 Auction Variations"
+      ],
+      "page_start": 4,
+      "page_end": 4,
+      "source_blocks": [
+        "p4:b0002",
+        "p4:b0003",
+        "p4:b0004",
+        "p4:b0005",
+        "p4:b0006",
+        "p4:b0007",
+        "p4:b0008",
+        "p4:b0009",
+        "p4:b0010",
+        "p4:b0011",
+        "p4:b0012",
+        "p4:b0013"
+      ],
+      "token_count": 411,
+      "previous_chunk_id": "c49c822ba21b8ffe:chunk:00010",
+      "next_chunk_id": "c49c822ba21b8ffe:chunk:00012",
+      "metadata": {
+        "filename": "Quant_Guild_Application_UPDATE.pdf",
+        "mime_type": "application/pdf"
+      }
+    },
+    {
+      "chunk_id": "c49c822ba21b8ffe:chunk:00012",
+      "document_id": "c49c822ba21b8ffe",
+      "chunk_index": 12,
+      "chunk_type": "TEXT",
+      "text": "You submit one file per variation, so make one copy of the template for each variation you enter. Use Template.py for Variations 1 and 2, Template 3.py for Variation 3 and Template 4.py for Variation 4.\n\nEach file defines exactly one class called Bot , and the engine calls two methods on it:\n\n• init (self, config) runs once, before round 1. Store whatever you like on self . It is identical across all four variations. config is a dictionary with player id , variation , num players , num rounds and starting capital . Note that starting capital is your block 1 capital only; later blocks redraw it and you will see the new figure through obs[\"capital\"] . • get bid(self, obs) runs every round. obs is a dictionary of everything you know this round. Return a number: your bid.\n\nThe only structural difference between the variations is how many keys obs contains. Variation 1 gets the fewest, and each later variation gets the same keys or more. Everything else that changes is the payoff rule, which lives in the engine, not in your file.\n\nEvery variation receives these:\n\nobs[\"round\"] # 1 to 2000 obs[\"x\"] # your value this round obs[\"capital\"] # your money now, and your max legal bid obs[\"num_players\"] # bots still solvent obs[\"highest_bid_last_round\"] obs[\"second_highest_bid_last_round\"] obs[\"my_last_bid\"] obs[\"my_last_rank\"] # 1 = you won obs[\"my_last_payoff\"]",
+      "section_title": "6.1 The shape of a bot",
+      "section_path": [
+        "6 Writing your bot",
+        "6.1 The shape of a bot"
+      ],
+      "page_start": 5,
+      "page_end": 5,
+      "source_blocks": [
+        "p5:b0002",
+        "p5:b0003",
+        "p5:b0004",
+        "p5:b0005",
+        "p5:b0006",
+        "p5:b0007"
+      ],
+      "token_count": 226,
+      "previous_chunk_id": "c49c822ba21b8ffe:chunk:00011",
+      "next_chunk_id": "c49c822ba21b8ffe:chunk:00013",
+      "metadata": {
+        "filename": "Quant_Guild_Application_UPDATE.pdf",
+        "mime_type": "application/pdf"
+      }
+    },
+    {
+      "chunk_id": "c49c822ba21b8ffe:chunk:00013",
+      "document_id": "c49c822ba21b8ffe",
+      "chunk_index": 13,
+      "chunk_type": "TEXT",
+      "text": "The common keys, and nothing else. When you win, your payoff is your own x minus your bid.\n\nclass Bot:\n\ndef __init__(self, config):\n\npass\n\ndef get_bid(self, obs):\n\nbid = 0.5 * obs[\"x\"] return max(0.0, min(bid, obs[\"capital\"]))",
+      "section_title": "6.2 Variation 1: ROLLNO 1.py",
+      "section_path": [
+        "6 Writing your bot",
+        "6.2 Variation 1: ROLLNO 1.py"
+      ],
+      "page_start": 5,
+      "page_end": 5,
+      "source_blocks": [
+        "p5:b0009",
+        "p5:b0010",
+        "p5:b0011",
+        "p5:b0012",
+        "p5:b0013",
+        "p5:b0014"
+      ],
+      "token_count": 36,
+      "previous_chunk_id": "c49c822ba21b8ffe:chunk:00012",
+      "next_chunk_id": "c49c822ba21b8ffe:chunk:00014",
+      "metadata": {
+        "filename": "Quant_Guild_Application_UPDATE.pdf",
+        "mime_type": "application/pdf"
+      }
+    },
+    {
+      "chunk_id": "c49c822ba21b8ffe:chunk:00014",
+      "document_id": "c49c822ba21b8ffe",
+      "chunk_index": 14,
+      "chunk_type": "TEXT",
+      "text": "You also get obs[\"max value last round\"] , which is last round’s X , the highest value anyone drew. When you win, your payoff is X minus your bid, so this key is the single most useful thing in the observation.\n\n5\n\nclass Bot:\n\ndef __init__(self, config):\n\nself.past_X = []\n\ndef get_bid(self, obs):\n\nif obs[\"round\"] > 1:\n\nself.past_X.append(obs[\"max_value_last_round\"])\n\nbid = 0.5 * obs[\"x\"] return max(0.0, min(bid, obs[\"capital\"]))",
+      "section_title": "6.3 Variation 2: ROLLNO 2.py",
+      "section_path": [
+        "6 Writing your bot",
+        "6.3 Variation 2: ROLLNO 2.py"
+      ],
+      "page_start": 5,
+      "page_end": 6,
+      "source_blocks": [
+        "p5:b0016",
+        "p5:b0017",
+        "p6:b0000",
+        "p6:b0001",
+        "p6:b0002",
+        "p6:b0003",
+        "p6:b0004",
+        "p6:b0005",
+        "p6:b0006"
+      ],
+      "token_count": 67,
+      "previous_chunk_id": "c49c822ba21b8ffe:chunk:00013",
+      "next_chunk_id": "c49c822ba21b8ffe:chunk:00015",
+      "metadata": {
+        "filename": "Quant_Guild_Application_UPDATE.pdf",
+        "mime_type": "application/pdf"
+      }
+    },
+    {
+      "chunk_id": "c49c822ba21b8ffe:chunk:00015",
+      "document_id": "c49c822ba21b8ffe",
+      "chunk_index": 15,
+      "chunk_type": "TEXT",
+      "text": "Exactly the same keys as Variation 2. Only the payoff rule changes: come second and you pay a penalty. Watch obs[\"my last rank\"] == 2 to see when you were charged.\n\nclass Bot:\n\ndef __init__(self, config):\n\nself.past_X = []\n\ndef get_bid(self, obs):\n\nif obs[\"round\"] > 1:\n\nself.past_X.append(obs[\"max_value_last_round\"]) if obs[\"my_last_rank\"] == 2:\n\npass # you paid a penalty last round\n\nbid = 0.5 * obs[\"x\"] return max(0.0, min(bid, obs[\"capital\"]))",
+      "section_title": "6.4 Variation 3: ROLLNO 3.py",
+      "section_path": [
+        "6 Writing your bot",
+        "6.4 Variation 3: ROLLNO 3.py"
+      ],
+      "page_start": 6,
+      "page_end": 6,
+      "source_blocks": [
+        "p6:b0008",
+        "p6:b0009",
+        "p6:b0010",
+        "p6:b0011",
+        "p6:b0012",
+        "p6:b0013",
+        "p6:b0014",
+        "p6:b0015",
+        "p6:b0016"
+      ],
+      "token_count": 68,
+      "previous_chunk_id": "c49c822ba21b8ffe:chunk:00014",
+      "next_chunk_id": "c49c822ba21b8ffe:chunk:00016",
+      "metadata": {
+        "filename": "Quant_Guild_Application_UPDATE.pdf",
+        "mime_type": "application/pdf"
+      }
+    },
+    {
+      "chunk_id": "c49c822ba21b8ffe:chunk:00016",
+      "document_id": "c49c822ba21b8ffe",
+      "chunk_index": 16,
+      "chunk_type": "TEXT",
+      "text": "Variation 2’s keys plus obs[\"top bids last round\"] , last round’s five highest bids. It is always a list of exactly five floats, zero-padded if fewer than five bids were placed, so unpacking it is safe.\n\nclass Bot:\n\ndef __init__(self, config):\n\nself.past_X = []\n\ndef get_bid(self, obs):\n\nif obs[\"round\"] > 1:\n\nself.past_X.append(obs[\"max_value_last_round\"])\n\nb1, b2, b3, b4, b5 = obs[\"top_bids_last_round\"]\n\nbid = 0.5 * obs[\"x\"] return max(0.0, min(bid, obs[\"capital\"]))\n\n6",
+      "section_title": "6.5 Variation 4: ROLLNO 4.py",
+      "section_path": [
+        "6 Writing your bot",
+        "6.5 Variation 4: ROLLNO 4.py"
+      ],
+      "page_start": 6,
+      "page_end": 6,
+      "source_blocks": [
+        "p6:b0018",
+        "p6:b0019",
+        "p6:b0020",
+        "p6:b0021",
+        "p6:b0022",
+        "p6:b0023",
+        "p6:b0024",
+        "p6:b0025",
+        "p6:b0026",
+        "p6:b0027"
+      ],
+      "token_count": 69,
+      "previous_chunk_id": "c49c822ba21b8ffe:chunk:00015",
+      "next_chunk_id": "c49c822ba21b8ffe:chunk:00017",
+      "metadata": {
+        "filename": "Quant_Guild_Application_UPDATE.pdf",
+        "mime_type": "application/pdf"
+      }
+    },
+    {
+      "chunk_id": "c49c822ba21b8ffe:chunk:00017",
+      "document_id": "c49c822ba21b8ffe",
+      "chunk_index": 17,
+      "chunk_type": "TEXT",
+      "text": "ROLLNO 1.py none ROLLNO 2.py max value last round ROLLNO 3.py max value last round ROLLNO 4.py max value last round , top bids last round\n\nTwo rules that apply everywhere:\n\n• Never read a key your variation does not get. Reaching for top bids last round in a Variation 2 file raises an error, and an errored round is scored as a bid of 0. Do it every round and your upload fails the 30-errors-in-120-rounds check outright. • Always finish with return max(0.0, min(bid, obs[\"capital\"])) . The engine does not clamp an over-capital bid down to your capital, it throws the bid away and scores you at 0, so the clamp has to be yours.\n\nThe 0.5 * obs[\"x\"] in every skeleton above is one of the published sample bots. It is delib- erately bad. Replacing it is the entire competition.",
+      "section_title": "File Extra keys available",
+      "section_path": [
+        "6 Writing your bot",
+        "6.6 In short",
+        "File Extra keys available"
+      ],
+      "page_start": 7,
+      "page_end": 7,
+      "source_blocks": [
+        "p7:b0002",
+        "p7:b0003",
+        "p7:b0004",
+        "p7:b0005"
+      ],
+      "token_count": 142,
+      "previous_chunk_id": "c49c822ba21b8ffe:chunk:00016",
+      "next_chunk_id": "c49c822ba21b8ffe:chunk:00018",
+      "metadata": {
+        "filename": "Quant_Guild_Application_UPDATE.pdf",
+        "mime_type": "application/pdf"
+      }
+    },
+    {
+      "chunk_id": "c49c822ba21b8ffe:chunk:00018",
+      "document_id": "c49c822ba21b8ffe",
+      "chunk_index": 18,
+      "chunk_type": "TEXT",
+      "text": "Raw profit is not comparable across blocks — a block with M b = 2000 produces payoffs an order of magnitude larger than one with M b = 200, and starting capitals differ between players inside the same block. Profit is therefore normalised in two steps. The full specification is at quantguildiitm.in/api/docs/scoring.pdf .\n\nStep 1 — scale. Write M b = m b + R b for the block’s maximum possible value. For player i in block b ,\n\ni = C ( b, end)\n\ni − C ( b, 0)\n\nπ ( b )\n\ni M b\n\n,\n\ni.e. profit measured in units of that block’s ceiling. A bankrupt bot has C ( b, end) = 0, giving π ( b )\n\ni = − C ( b, 0)\n\ni /M b .\n\nStep 2 — standardise within the group. Let µ b and σ b be the population mean and standard deviation of π ( b ) over the bots in your group for that block. Then\n\nπ ( b )\n\n(︄\n\n)︄\n\ni − µ b σ b\n\nz ( b )\n\n, P ( b )\n\ni = 50 + 15 z ( b )\n\n, − 3 , 3\n\ni ∈ [5 , 95] .\n\ni = clip\n\nClipping at ± 3 prevents one freak block from deciding the competition. If σ b = 0, every bot in that block scores exactly 50.",
+      "section_title": "7 Scoring",
+      "section_path": [
+        "7 Scoring"
+      ],
+      "page_start": 7,
+      "page_end": 7,
+      "source_blocks": [
+        "p7:b0007",
+        "p7:b0008",
+        "p7:b0012",
+        "p7:b0009",
+        "p7:b0011",
+        "p7:b0013",
+        "p7:b0010",
+        "p7:b0014",
+        "p7:b0015",
+        "p7:b0016",
+        "p7:b0017",
+        "p7:b0020",
+        "p7:b0018",
+        "p7:b0019",
+        "p7:b0027",
+        "p7:b0021",
+        "p7:b0023",
+        "p7:b0025",
+        "p7:b0022",
+        "p7:b0026",
+        "p7:b0024",
+        "p7:b0028"
+      ],
+      "token_count": 238,
+      "previous_chunk_id": "c49c822ba21b8ffe:chunk:00017",
+      "next_chunk_id": "c49c822ba21b8ffe:chunk:00019",
+      "metadata": {
+        "filename": "Quant_Guild_Application_UPDATE.pdf",
+        "mime_type": "application/pdf"
+      }
+    },
+    {
+      "chunk_id": "c49c822ba21b8ffe:chunk:00019",
+      "document_id": "c49c822ba21b8ffe",
+      "chunk_index": 19,
+      "chunk_type": "TEXT",
+      "text": "P ( b )\n\n∑︂\n\nIteration score =\n\ni , Total =\n\nIteration score .\n\niterations\n\nb =1\n\nNote that the divisor in Step 1 is a positive constant within a block, so it cancels out of the z -score entirely: the points P would be identical if we divided by R b instead. The choice of M b only affects the reported π -based diagnostics below, which are stated in units of the block ceiling.\n\n7\n\nPublished per bot: total score, mean block points, mean π , spread (population SD of π across blocks), worst-block π , survival rate, raw net-profit statistics, wins, errors and timeouts. Dis- qualified bots are ranked last.",
+      "section_title": "4 ∑︂",
+      "section_path": [
+        "4 ∑︂"
+      ],
+      "page_start": 7,
+      "page_end": 8,
+      "source_blocks": [
+        "p7:b0032",
+        "p7:b0030",
+        "p7:b0031",
+        "p7:b0034",
+        "p7:b0033",
+        "p7:b0035",
+        "p7:b0036",
+        "p7:b0037",
+        "p7:b0038",
+        "p8:b0000"
+      ],
+      "token_count": 113,
+      "previous_chunk_id": "c49c822ba21b8ffe:chunk:00018",
+      "next_chunk_id": "c49c822ba21b8ffe:chunk:00020",
+      "metadata": {
+        "filename": "Quant_Guild_Application_UPDATE.pdf",
+        "mime_type": "application/pdf"
+      }
+    },
+    {
+      "chunk_id": "c49c822ba21b8ffe:chunk:00020",
+      "document_id": "c49c822ba21b8ffe",
+      "chunk_index": 20,
+      "chunk_type": "TEXT",
+      "text": "A single 20-bot arrangement is far too noisy to rank on — who you are grouped with matters nearly as much as how you play. Each variation is therefore run over 5 iterations , each with its own seed and its own 4-block schedule. Seeds are published afterwards so results are reproducible.\n\n• Iterations 1 and 2: random. Bots are shuffled into groups under two independent seeds. Full 2000 rounds, 4 blocks each. • Iteration 3: strength-balanced. Cumulative points from iterations 1–2 are used to balance the groups, not to segregate them: bots are sorted by points and dealt into groups in a snake pattern, so every group has similar average strength. This sharply reduces the variance of the standardised score while keeping cross-group comparison fair. • Iterations 4 and 5: finals. The top 20 bots by cumulative score after iteration 3 play two head-to-head iterations under fresh seeds.\n\nFinal ranking is the sum of scores over all iterations a bot played, tie-broken by mean block points. In the final evaluation run, there could be more than 5 iterations to evaluate more concretely.",
+      "section_title": "8 Tournament Structure",
+      "section_path": [
+        "8 Tournament Structure"
+      ],
+      "page_start": 8,
+      "page_end": 8,
+      "source_blocks": [
+        "p8:b0002",
+        "p8:b0003",
+        "p8:b0004"
+      ],
+      "token_count": 183,
+      "previous_chunk_id": "c49c822ba21b8ffe:chunk:00019",
+      "next_chunk_id": "c49c822ba21b8ffe:chunk:00021",
+      "metadata": {
+        "filename": "Quant_Guild_Application_UPDATE.pdf",
+        "mime_type": "application/pdf"
+      }
+    },
+    {
+      "chunk_id": "c49c822ba21b8ffe:chunk:00021",
+      "document_id": "c49c822ba21b8ffe",
+      "chunk_index": 21,
+      "chunk_type": "TEXT",
+      "text": "The field is split into ⌈ n/ 20 ⌉ groups of as near to equal size as possible — 54 bots become 18 / 18 / 18, never 20 / 20 / 14. Any group short of 20 is filled up with the published sample bots. Fillers play for real and count in the standardisation of that group, but they never appear on the leaderboard. The random and balanced iterations use the same split; only the order in which bots are dealt into it differs.",
+      "section_title": "8.1 Grouping",
+      "section_path": [
+        "8 Tournament Structure",
+        "8.1 Grouping"
+      ],
+      "page_start": 8,
+      "page_end": 8,
+      "source_blocks": [
+        "p8:b0006"
+      ],
+      "token_count": 85,
+      "previous_chunk_id": "c49c822ba21b8ffe:chunk:00020",
+      "next_chunk_id": "c49c822ba21b8ffe:chunk:00022",
+      "metadata": {
+        "filename": "Quant_Guild_Application_UPDATE.pdf",
+        "mime_type": "application/pdf"
+      }
+    },
+    {
+      "chunk_id": "c49c822ba21b8ffe:chunk:00022",
+      "document_id": "c49c822ba21b8ffe",
+      "chunk_index": 22,
+      "chunk_type": "TEXT",
+      "text": "The mocks run the same full 5-iteration structure as the real thing. There are four of them: Mock Auction 1 on 12/09 (Variations 1 and 2 only), then one every night at EOD on 13/09, 14/09 and 15/09 across all four variations. None of them count toward the final result. There is no live leaderboard between rounds — only the mock boards and the final board are published. After every run, each participant receives a per-block table ( C start , C end , M b , π , P , bankrupt) showing exactly where their bot broke.",
+      "section_title": "8.2 Mock auctions",
+      "section_path": [
+        "8 Tournament Structure",
+        "8.2 Mock auctions"
+      ],
+      "page_start": 8,
+      "page_end": 8,
+      "source_blocks": [
+        "p8:b0008"
+      ],
+      "token_count": 98,
+      "previous_chunk_id": "c49c822ba21b8ffe:chunk:00021",
+      "next_chunk_id": "c49c822ba21b8ffe:chunk:00023",
+      "metadata": {
+        "filename": "Quant_Guild_Application_UPDATE.pdf",
+        "mime_type": "application/pdf"
+      }
+    },
+    {
+      "chunk_id": "c49c822ba21b8ffe:chunk:00023",
+      "document_id": "c49c822ba21b8ffe",
+      "chunk_index": 23,
+      "chunk_type": "TEXT",
+      "text": "Three bots, capital 500 each. Suppose the hidden block has m b = 200, R b = 300, so values fall in [200 , 500].\n\n• Bot 1 — always bids 15 more than its own value.\n\n8\n\n• Bot 2 — always bids 5 more than its own value. • Bot 3 — always bids half its own value.\n\nThe values drawn are 230 , 250 , 260, so X = 260. The bids are 245 , 255 , 130. Bot 2 wins; Bot 1 is rank 2.",
+      "section_title": "Variations 1–3",
+      "section_path": [
+        "9 Sample Round",
+        "Variations 1–3"
+      ],
+      "page_start": 8,
+      "page_end": 9,
+      "source_blocks": [
+        "p8:b0011",
+        "p8:b0012",
+        "p8:b0013",
+        "p9:b0000",
+        "p9:b0001"
+      ],
+      "token_count": 89,
+      "previous_chunk_id": "c49c822ba21b8ffe:chunk:00022",
+      "next_chunk_id": "c49c822ba21b8ffe:chunk:00024",
+      "metadata": {
+        "filename": "Quant_Guild_Application_UPDATE.pdf",
+        "mime_type": "application/pdf"
+      }
+    },
+    {
+      "chunk_id": "c49c822ba21b8ffe:chunk:00024",
+      "document_id": "c49c822ba21b8ffe",
+      "chunk_index": 24,
+      "chunk_type": "TEXT",
+      "text": "Bot 2 (rank 1) 250 − 255 = − 5 260 − 255 = +5 260 − 255 = +5 Bot 1 (rank 2) 0 0 − 0 . 5 × 5 = − 2 . 5 Capital after 500 / 495 / 500 500 / 505 / 500 497.5 / 505 / 500",
+      "section_title": "Variation 1 Variation 2 Variation 3",
+      "section_path": [
+        "9 Sample Round",
+        "Variations 1–3",
+        "Variation 1 Variation 2 Variation 3"
+      ],
+      "page_start": 9,
+      "page_end": 9,
+      "source_blocks": [
+        "p9:b0003"
+      ],
+      "token_count": 54,
+      "previous_chunk_id": "c49c822ba21b8ffe:chunk:00023",
+      "next_chunk_id": "c49c822ba21b8ffe:chunk:00025",
+      "metadata": {
+        "filename": "Quant_Guild_Application_UPDATE.pdf",
+        "mime_type": "application/pdf"
+      }
+    },
+    {
+      "chunk_id": "c49c822ba21b8ffe:chunk:00025",
+      "document_id": "c49c822ba21b8ffe",
+      "chunk_index": 25,
+      "chunk_type": "TEXT",
+      "text": "Six bots, capital 500 each, same block [200 , 500].",
+      "section_title": "Variation 4",
+      "section_path": [
+        "9 Sample Round",
+        "Variation 4"
+      ],
+      "page_start": 9,
+      "page_end": 9,
+      "source_blocks": [
+        "p9:b0005"
+      ],
+      "token_count": 10,
+      "previous_chunk_id": "c49c822ba21b8ffe:chunk:00024",
+      "next_chunk_id": "c49c822ba21b8ffe:chunk:00026",
+      "metadata": {
+        "filename": "Quant_Guild_Application_UPDATE.pdf",
+        "mime_type": "application/pdf"
+      }
+    },
+    {
+      "chunk_id": "c49c822ba21b8ffe:chunk:00026",
+      "document_id": "c49c822ba21b8ffe",
+      "chunk_index": 26,
+      "chunk_type": "TEXT",
+      "text": "Bot 6 255 258 1 X − b 2 = 260 − 255 = +5 505 Bot 2 250 255 2 X − b 1 = 260 − 258 = +2 502 Bot 5 245 250 3 − 0 . 5 × 7 = − 3 . 5 496.5 Bot 1 230 245 4 − 0 . 3 × 7 = − 2 . 1 497.9 Bot 4 220 240 5 − 0 . 2 × 7 = − 1 . 4 498.6 Bot 3 260 130 6 0 500\n\nHere X = 260 and b 1 = 258 ≤ X , so the funded branch applies. The top two earn T = 5+2 = 7 between them, and ranks 3–5 pay exactly that 7 back. Note that Bot 3 bid the least of anyone and still ends the round better off than Bots 1, 4 and 5.\n\nHad Bot 6 bid 262 > X instead, it alone would have received 260 − 262 = − 2 and no other bot would have been affected at all.",
+      "section_title": "Value Bid Rank Payoff Capital after",
+      "section_path": [
+        "9 Sample Round",
+        "Variation 4",
+        "Value Bid Rank Payoff Capital after"
+      ],
+      "page_start": 9,
+      "page_end": 9,
+      "source_blocks": [
+        "p9:b0007",
+        "p9:b0008",
+        "p9:b0009"
+      ],
+      "token_count": 177,
+      "previous_chunk_id": "c49c822ba21b8ffe:chunk:00025",
+      "next_chunk_id": "c49c822ba21b8ffe:chunk:00027",
+      "metadata": {
+        "filename": "Quant_Guild_Application_UPDATE.pdf",
+        "mime_type": "application/pdf"
+      }
+    },
+    {
+      "chunk_id": "c49c822ba21b8ffe:chunk:00027",
+      "document_id": "c49c822ba21b8ffe",
+      "chunk_index": 27,
+      "chunk_type": "TEXT",
+      "text": "Submit one Python file per variation, plus a short report explaining your strategy.\n\n• Naming: ROLLNO 1.py through ROLLNO 4.py , matching the variation — e.g. OB24C420 3.py . Roll numbers are two letters, two digits, a letter, then three digits. • You may enter any subset of the variations. Each variation has its own leaderboard ; there is no combined score across variations. • Upload at /submit on quantguildiitm.in , signed in with your smail account. The roll number in the filename must match your smail account. • Every upload is checked immediately: (1) filename, (2) a code policy check, (3) a 120-round test game against the sample bots. It is rejected if it crashes, goes bankrupt, or errors on more than 30 of the 120 rounds. • You may resubmit as often as you like, with a 60-second cooldown between uploads. The latest accepted file for each variation is the one that plays. Only variations that have been released are accepted.\n\nYour report should cover, for each variation: the core idea, how you estimate the hidden dis- tribution, how your bid depends on your starting capital, how you detect and react to a block change, and which libraries you used.\n\n9\n\nThe report goes through the submission form, not the site:\n\nhttps://forms.gle/eDAQ47LsaDsvbeiM9",
+      "section_title": "10 Deliverables",
+      "section_path": [
+        "10 Deliverables"
+      ],
+      "page_start": 9,
+      "page_end": 10,
+      "source_blocks": [
+        "p9:b0011",
+        "p9:b0012",
+        "p9:b0013",
+        "p9:b0014",
+        "p10:b0000",
+        "p10:b0001"
+      ],
+      "token_count": 214,
+      "previous_chunk_id": "c49c822ba21b8ffe:chunk:00026",
+      "next_chunk_id": "c49c822ba21b8ffe:chunk:00028",
+      "metadata": {
+        "filename": "Quant_Guild_Application_UPDATE.pdf",
+        "mime_type": "application/pdf"
+      }
+    },
+    {
+      "chunk_id": "c49c822ba21b8ffe:chunk:00028",
+      "document_id": "c49c822ba21b8ffe",
+      "chunk_index": 28,
+      "chunk_type": "TEXT",
+      "text": "• Template.py (Variations 1 and 2), Template 3.py , Template 4.py — edit only these. • local test.py — a rough local stand-in that uses made-up bounds and only 3–4 bots . It is not the real engine, so treat its numbers as a smoke test and run it over several seeds before you trust anything. • sample bots/ — the three published bots ( x +15, x +5, 0 . 5 x ), README.md and README v3 v4.md . • The engine source is not included.",
+      "section_title": "Starter kit",
+      "section_path": [
+        "11 Rules and Constraints",
+        "Starter kit"
+      ],
+      "page_start": 10,
+      "page_end": 10,
+      "source_blocks": [
+        "p10:b0005"
+      ],
+      "token_count": 87,
+      "previous_chunk_id": "c49c822ba21b8ffe:chunk:00027",
+      "next_chunk_id": "c49c822ba21b8ffe:chunk:00029",
+      "metadata": {
+        "filename": "Quant_Guild_Application_UPDATE.pdf",
+        "mime_type": "application/pdf"
+      }
+    },
+    {
+      "chunk_id": "c49c822ba21b8ffe:chunk:00029",
+      "document_id": "c49c822ba21b8ffe",
+      "chunk_index": 29,
+      "chunk_type": "TEXT",
+      "text": "• Under 1 second per round . A round that times out is scored as a bid of 0. • Under 100 MB of memory.",
+      "section_title": "Limits",
+      "section_path": [
+        "11 Rules and Constraints",
+        "Limits"
+      ],
+      "page_start": 10,
+      "page_end": 10,
+      "source_blocks": [
+        "p10:b0007"
+      ],
+      "token_count": 25,
+      "previous_chunk_id": "c49c822ba21b8ffe:chunk:00028",
+      "next_chunk_id": "c49c822ba21b8ffe:chunk:00030",
+      "metadata": {
+        "filename": "Quant_Guild_Application_UPDATE.pdf",
+        "mime_type": "application/pdf"
+      }
+    },
+    {
+      "chunk_id": "c49c822ba21b8ffe:chunk:00030",
+      "document_id": "c49c822ba21b8ffe",
+      "chunk_index": 30,
+      "chunk_type": "TEXT",
+      "text": "Only the following imports are permitted: math , cmath , random , statistics , decimal , fractions , itertools , functools , operator , collections , heapq , bisect , array , copy , enum , dataclasses , typing , numbers , abc , string , re , json , time , datetime , warnings , numpy , pandas , scipy , sklearn , statsmodels .\n\nList the ones you actually use in your report.",
+      "section_title": "Allowed libraries",
+      "section_path": [
+        "11 Rules and Constraints",
+        "Allowed libraries"
+      ],
+      "page_start": 10,
+      "page_end": 10,
+      "source_blocks": [
+        "p10:b0009",
+        "p10:b0010"
+      ],
+      "token_count": 75,
+      "previous_chunk_id": "c49c822ba21b8ffe:chunk:00029",
+      "next_chunk_id": "c49c822ba21b8ffe:chunk:00031",
+      "metadata": {
+        "filename": "Quant_Guild_Application_UPDATE.pdf",
+        "mime_type": "application/pdf"
+      }
+    },
+    {
+      "chunk_id": "c49c822ba21b8ffe:chunk:00031",
+      "document_id": "c49c822ba21b8ffe",
+      "chunk_index": 31,
+      "chunk_type": "TEXT",
+      "text": "• eval , exec , compile , open , import , input , and dunder attribute access are rejected at upload time. • Any file, process or network access, or any attempt to inspect the simulator, means dis- qualification .",
+      "section_title": "Prohibited",
+      "section_path": [
+        "11 Rules and Constraints",
+        "Prohibited"
+      ],
+      "page_start": 10,
+      "page_end": 10,
+      "source_blocks": [
+        "p10:b0012"
+      ],
+      "token_count": 40,
+      "previous_chunk_id": "c49c822ba21b8ffe:chunk:00030",
+      "next_chunk_id": "c49c822ba21b8ffe:chunk:00032",
+      "metadata": {
+        "filename": "Quant_Guild_Application_UPDATE.pdf",
+        "mime_type": "application/pdf"
+      }
+    },
+    {
+      "chunk_id": "c49c822ba21b8ffe:chunk:00032",
+      "document_id": "c49c822ba21b8ffe",
+      "chunk_index": 32,
+      "chunk_type": "TEXT",
+      "text": "• The report and the reasoning behind your strategy — this is the primary metric. • Net profit alone is not a metric. It is read alongside how the strategy adapts. • Robustness to starting capital: does aggression genuinely respond to bankroll, or is it fixed? • Robustness across blocks: consistency of π across the four regimes, and how fast the bot re-adapts after a boundary. • Survival: bankruptcy is heavily penalised — it forfeits the rest of the block.\n\n10",
+      "section_title": "12 What We Are Looking For",
+      "section_path": [
+        "12 What We Are Looking For"
+      ],
+      "page_start": 10,
+      "page_end": 10,
+      "source_blocks": [
+        "p10:b0014",
+        "p10:b0015"
+      ],
+      "token_count": 81,
+      "previous_chunk_id": "c49c822ba21b8ffe:chunk:00031",
+      "next_chunk_id": "c49c822ba21b8ffe:chunk:00033",
+      "metadata": {
+        "filename": "Quant_Guild_Application_UPDATE.pdf",
+        "mime_type": "application/pdf"
+      }
+    },
+    {
+      "chunk_id": "c49c822ba21b8ffe:chunk:00033",
+      "document_id": "c49c822ba21b8ffe",
+      "chunk_index": 33,
+      "chunk_type": "TEXT",
+      "text": "• Investopedia — Random Variables • W3Schools — Python Introduction • W3Schools — NumPy Introduction\n\nFeel free to make extensive use of AI — we are testing the logic behind your strategy, not your coding skills. That said, please indent properly and comment where it helps us read your code.",
+      "section_title": "13 Resources",
+      "section_path": [
+        "13 Resources"
+      ],
+      "page_start": 11,
+      "page_end": 11,
+      "source_blocks": [
+        "p11:b0001",
+        "p11:b0002"
+      ],
+      "token_count": 50,
+      "previous_chunk_id": "c49c822ba21b8ffe:chunk:00032",
+      "next_chunk_id": "c49c822ba21b8ffe:chunk:00034",
+      "metadata": {
+        "filename": "Quant_Guild_Application_UPDATE.pdf",
+        "mime_type": "application/pdf"
+      }
+    },
+    {
+      "chunk_id": "c49c822ba21b8ffe:chunk:00034",
+      "document_id": "c49c822ba21b8ffe",
+      "chunk_index": 34,
+      "chunk_type": "TEXT",
+      "text": "11",
+      "section_title": "ALL THE BEST!",
+      "section_path": [
+        "13 Resources",
+        "ALL THE BEST!"
+      ],
+      "page_start": 11,
+      "page_end": 11,
+      "source_blocks": [
+        "p11:b0004"
+      ],
+      "token_count": 1,
+      "previous_chunk_id": "c49c822ba21b8ffe:chunk:00033",
+      "next_chunk_id": null,
+      "metadata": {
+        "filename": "Quant_Guild_Application_UPDATE.pdf",
+        "mime_type": "application/pdf"
+      }
+    }
+  ],
+  "stats": {
+    "characters_extracted": 21609,
+    "blocks_extracted": 198,
+    "chunks_created": 35,
+    "average_tokens_per_chunk": 117
+  },
+  "warnings": []
+}

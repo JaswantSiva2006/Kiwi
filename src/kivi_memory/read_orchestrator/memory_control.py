@@ -9,7 +9,6 @@ from enum import StrEnum
 from typing import Any
 from uuid import uuid4
 
-from psycopg.types.json import Jsonb
 from pydantic import BaseModel, ConfigDict, Field
 
 from kivi_memory.calendar import cancel_calendar_event_for_memory

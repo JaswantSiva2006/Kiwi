@@ -77,6 +77,21 @@ class WebSearchArgs(BaseModel):
         return self
 
 
+class DocumentSearchArgs(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    query: str
+    top_k: int = Field(default=6, ge=1, le=12)
+    document_ids: list[str] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def validate_document_search(self) -> "DocumentSearchArgs":
+        if not self.query.strip():
+            raise ValueError("document search query must not be empty")
+        self.document_ids = [str(item).strip() for item in self.document_ids if str(item).strip()]
+        return self
+
+
 class MemoryControlArgs(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -189,6 +204,15 @@ def default_tool_specs() -> list[ToolSpec]:
                 "appropriate freshness."
             ),
             input_model=WebSearchArgs,
+        ),
+        ToolSpec(
+            name="document.search",
+            description=(
+                "Search indexed user documents when answering may require information contained in PDFs, papers, "
+                "reports, specifications, notes, or other stored documents. Explicit document/file/PDF intent should "
+                "strongly consider this tool; it may be combined with semantic_memory.search."
+            ),
+            input_model=DocumentSearchArgs,
         ),
     ]
 

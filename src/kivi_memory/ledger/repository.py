@@ -3,10 +3,9 @@
 from __future__ import annotations
 
 from datetime import date, datetime
+import json
 from typing import Any
 from uuid import UUID
-
-from psycopg.types.json import Jsonb
 
 from kivi_memory.entity_resolution.repository import connect
 from kivi_memory.ledger.models import AddMemoryResult, MemoryNotFoundError, StoredMemory
@@ -139,7 +138,7 @@ class LedgerRepository:
     ) -> None:
         cur.execute(
             "INSERT INTO memory_events (memory_id, event_type, payload) VALUES (%s, %s, %s)",
-            (memory_id, event_type, Jsonb(payload)),
+            (memory_id, event_type, _jsonb(payload)),
         )
 
     def get_memory(self, memory_id: str) -> StoredMemory:
@@ -342,8 +341,17 @@ def insert_memory_record_in_transaction(
             ),
         )
 
-    cur.execute(event_sql, (memory_id, "MEMORY_ADDED", Jsonb(event_payload)))
+    cur.execute(event_sql, (memory_id, "MEMORY_ADDED", _jsonb(event_payload)))
     return AddMemoryResult(memory_id=memory_id, status=row["status"], version=int(row["version"]))
+
+
+def _jsonb(payload: dict[str, Any]) -> Any:
+    try:
+        from psycopg.types.json import Jsonb
+
+        return Jsonb(payload)
+    except ImportError:
+        return json.dumps(payload)
 
 
 def _jsonable_row(row: dict[str, Any]) -> dict[str, Any]:

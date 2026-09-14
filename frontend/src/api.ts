@@ -3,6 +3,22 @@ export type ChatMessage = {
   content: string;
 };
 
+export type DocumentUploadResult = {
+  document_id: string;
+  filename: string;
+  sha256: string;
+  status: "PARSING" | "EMBEDDING" | "READY" | "FAILED";
+  duplicate: boolean;
+  chunks_indexed: number;
+  parse_status?: string | null;
+  error?: string | null;
+};
+
+export type ChatRequestOptions = {
+  forceDocumentSearch?: boolean;
+  documentIds?: string[];
+};
+
 const API_BASE_URL = import.meta.env.VITE_KIVI_API_BASE_URL ?? "http://127.0.0.1:8000";
 
 export async function createThread(): Promise<string> {
@@ -17,7 +33,17 @@ export async function getThreadMessages(threadId: string): Promise<ChatMessage[]
   return data.messages ?? [];
 }
 
-export async function sendChatMessage(threadId: string, message: string): Promise<string> {
+export async function uploadDocument(file: File): Promise<DocumentUploadResult> {
+  const body = new FormData();
+  body.append("file", file);
+  const response = await fetch(`${API_BASE_URL}/api/documents`, {
+    method: "POST",
+    body,
+  });
+  return parseJson(response);
+}
+
+export async function sendChatMessage(threadId: string, message: string, options: ChatRequestOptions = {}): Promise<string> {
   const response = await fetch(`${API_BASE_URL}/api/chat/threads/${encodeURIComponent(threadId)}/messages`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -26,6 +52,8 @@ export async function sendChatMessage(threadId: string, message: string): Promis
       current_datetime: timezoneAwareNowIso(),
       timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       locale: navigator.language || "en-US",
+      force_document_search: options.forceDocumentSearch ?? false,
+      document_ids: options.documentIds ?? [],
     }),
   });
   const data = await parseJson(response);
@@ -36,6 +64,7 @@ export type ChatStreamEvent =
   | { type: "tool_activity"; label: string; tools?: string[] }
   | { type: "tool_activity_done" }
   | { type: "assistant_response"; text: string }
+  | { type: "memory_syncing" }
   | { type: "memory_updated"; ingestion_id?: string; cursor?: string }
   | { type: "done"; thread_id: string }
   | { type: "error"; message: string };
@@ -44,6 +73,7 @@ export async function streamChatMessage(
   threadId: string,
   message: string,
   onEvent: (event: ChatStreamEvent) => void,
+  options: ChatRequestOptions = {},
 ): Promise<void> {
   const response = await fetch(`${API_BASE_URL}/api/chat/threads/${encodeURIComponent(threadId)}/messages/stream`, {
     method: "POST",
@@ -53,6 +83,8 @@ export async function streamChatMessage(
       current_datetime: timezoneAwareNowIso(),
       timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       locale: navigator.language || "en-US",
+      force_document_search: options.forceDocumentSearch ?? false,
+      document_ids: options.documentIds ?? [],
     }),
   });
   if (!response.ok) {

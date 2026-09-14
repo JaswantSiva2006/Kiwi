@@ -3,10 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Iterator
-
-import psycopg
-from psycopg.rows import dict_row
+from typing import Any, Iterator
 
 from kivi_memory.entity_resolution.config import get_database_url
 from kivi_memory.entity_resolution.normalizer import normalize_entity_name
@@ -45,10 +42,23 @@ class EntityNotFoundError(ValueError):
     """Raised when an alias references an entity that does not exist."""
 
 
-def connect(database_url: str | None = None) -> psycopg.Connection:
-    """Open a row-dict psycopg connection using the shared database setting."""
+def connect(database_url: str | None = None) -> Any:
+    """Open a row-dict PostgreSQL connection.
 
-    return psycopg.connect(database_url or get_database_url(), row_factory=dict_row)
+    Prefer psycopg when available, but fall back to pg8000 on Windows systems
+    where local policy blocks libpq DLL loading.
+    """
+
+    url = database_url or get_database_url()
+    try:
+        import psycopg
+        from psycopg.rows import dict_row
+
+        return psycopg.connect(url, row_factory=dict_row)
+    except ImportError:
+        from kivi_memory.document_rag.database import _connect_pg8000
+
+        return _connect_pg8000(url)
 
 
 class EntityRepository:

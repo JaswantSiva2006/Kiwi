@@ -11,14 +11,6 @@ from kivi_memory.read_orchestrator.orchestrator import (
 from kivi_memory.read_orchestrator.prompt import READ_ROUTER_SYSTEM_PROMPT
 from kivi_memory.read_orchestrator.redis_history import RedisThreadHistoryTool, search_redis_thread_history
 from kivi_memory.read_orchestrator.registry import ToolRegistry, ToolSpec, default_tool_specs
-from kivi_memory.read_orchestrator.memory_control import MemoryControlResult, MemoryControlTool
-from kivi_memory.read_orchestrator.web_search import (
-    TavilyWebSearchProvider,
-    WebSearchProvider,
-    WebSearchResult,
-    WebSearchTool,
-    search_web,
-)
 
 __all__ = [
     "READ_ROUTER_MAX_ATTEMPTS",
@@ -29,19 +21,12 @@ __all__ = [
     "ReadSourceDecision",
     "ReadToolDecision",
     "RedisThreadHistoryTool",
-    "MemoryControlResult",
-    "MemoryControlTool",
     "RouterToolCall",
     "ToolExecutionResult",
     "ToolRegistry",
     "ToolSpec",
-    "TavilyWebSearchProvider",
-    "WebSearchProvider",
-    "WebSearchResult",
-    "WebSearchTool",
     "build_context",
     "default_tool_specs",
     "format_read_router_input",
     "search_redis_thread_history",
-    "search_web",
 ]

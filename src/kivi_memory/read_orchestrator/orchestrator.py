@@ -45,6 +45,7 @@ class ReadSideOrchestrator:
         *,
         current_datetime: datetime,
         user_timezone: str,
+        document_probe: dict[str, Any] | None = None,
     ) -> ReadOrchestrationResult:
         if not current_query.strip():
             raise ValueError("current_query must not be empty")
@@ -58,6 +59,7 @@ class ReadSideOrchestrator:
             recent_thread_context=recent_thread_context,
             current_datetime=current_datetime,
             user_timezone=user_timezone,
+            document_probe=document_probe,
         )
         started = time.perf_counter()
         calls = 0
@@ -160,6 +162,7 @@ def format_read_router_input(
     recent_thread_context: list[ThreadEpisode | ThreadMessage],
     current_datetime: datetime,
     user_timezone: str,
+    document_probe: dict[str, Any] | None = None,
 ) -> str:
     lines = [
         f"CURRENT_DATETIME: {current_datetime.isoformat()}",
@@ -172,6 +175,14 @@ def format_read_router_input(
             lines.append(f"{role}: {_one_line(text)}")
     else:
         lines.append("(none)")
+    if document_probe is not None:
+        lines.extend(
+            [
+                "",
+                "DOCUMENT_RELEVANCE_PROBE:",
+                json.dumps(document_probe, ensure_ascii=False, sort_keys=True),
+            ]
+        )
     lines.extend(["", "CURRENT USER QUERY:", _one_line(current_query)])
     return "\n".join(lines)
 

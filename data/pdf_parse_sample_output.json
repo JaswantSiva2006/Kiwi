@@ -1,0 +1,68 @@
+{
+  "document": {
+    "document_id": "42fb80cbb7e2fbda",
+    "filename": "pdf_parse_sample.pdf",
+    "sha256": "2f1053b65fd3460884bd4e2a8b363e4da21834a5bf7fe0c880585fb5e7ee74d0",
+    "page_count": 1,
+    "parser": "pymupdf",
+    "parse_status": "OK"
+  },
+  "chunks": [
+    {
+      "chunk_id": "42fb80cbb7e2fbda:chunk:00000",
+      "document_id": "42fb80cbb7e2fbda",
+      "chunk_index": 0,
+      "chunk_type": "TEXT",
+      "text": "This sample document verifies the standalone PDF parser command and section-aware output. It contains e",
+      "section_title": "1 Overview",
+      "section_path": [
+        "1 Overview"
+      ],
+      "page_start": 1,
+      "page_end": 1,
+      "source_blocks": [
+        "p1:b0001"
+      ],
+      "token_count": 15,
+      "previous_chunk_id": null,
+      "next_chunk_id": "42fb80cbb7e2fbda:chunk:00001",
+      "metadata": {
+        "filename": "pdf_parse_sample.pdf",
+        "mime_type": "application/pdf"
+      }
+    },
+    {
+      "chunk_id": "42fb80cbb7e2fbda:chunk:00001",
+      "document_id": "42fb80cbb7e2fbda",
+      "chunk_index": 1,
+      "chunk_type": "TEXT",
+      "text": "This sample document verifies the standalone PDF parser command and section-aware output. It contains e",
+      "section_title": "1.1 Details",
+      "section_path": [
+        "1 Overview",
+        "1.1 Details"
+      ],
+      "page_start": 1,
+      "page_end": 1,
+      "source_blocks": [
+        "p1:b0003"
+      ],
+      "token_count": 15,
+      "previous_chunk_id": "42fb80cbb7e2fbda:chunk:00000",
+      "next_chunk_id": null,
+      "metadata": {
+        "filename": "pdf_parse_sample.pdf",
+        "mime_type": "application/pdf"
+      }
+    }
+  ],
+  "stats": {
+    "characters_extracted": 227,
+    "blocks_extracted": 4,
+    "chunks_created": 2,
+    "average_tokens_per_chunk": 15
+  },
+  "warnings": [
+    "high_duplicate_chunk_ratio:0.50"
+  ]
+}

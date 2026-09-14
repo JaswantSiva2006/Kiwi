@@ -103,6 +103,8 @@ def _format_tool_section(tool: str, payload: Any, *, query: str) -> list[str]:
         return ["<REDIS_THREAD_HISTORY>", _format_redis_history(payload), "</REDIS_THREAD_HISTORY>"]
     if tool == "web.search":
         return ["<WEB_CONTEXT>", _format_web_context(payload), "</WEB_CONTEXT>"]
+    if tool == "document.search":
+        return ["<DOCUMENT_CONTEXT>", _format_document_context(payload), "</DOCUMENT_CONTEXT>"]
     if tool == "memory.control":
         return ["<MEMORY_CONTROL>", _format_memory_control(payload), "</MEMORY_CONTROL>"]
     tag = tool.upper().replace(".", "_")
@@ -374,6 +376,36 @@ def _format_web_context(web_result: Any | None) -> str:
                     f"Date: {item.get('published_at') or 'unknown'}",
                     f"URL: {item.get('url')}",
                     f"Relevant content: {_one_line(item.get('relevant_text') or '')}",
+                ]
+            )
+        )
+    return "\n\n".join(blocks)
+
+
+def _format_document_context(document_result: Any | None) -> str:
+    if document_result is None:
+        return "(none)"
+    data = _to_plain(document_result)
+    results = data.get("results") if isinstance(data, dict) else []
+    if not results:
+        return "[]"
+    blocks = []
+    for result in results:
+        item = _to_plain(result)
+        section_path = item.get("section_path") or []
+        section = item.get("section_title") or (" > ".join(section_path) if section_path else "unknown")
+        page_start = item.get("page_start")
+        page_end = item.get("page_end")
+        pages = str(page_start) if page_start == page_end else f"{page_start}-{page_end}"
+        blocks.append(
+            "\n".join(
+                [
+                    f"[{item.get('source_id')}]",
+                    f"File: {item.get('filename')}",
+                    f"Section: {section}",
+                    f"Pages: {pages}",
+                    "Text:",
+                    str(item.get("text") or "").strip(),
                 ]
             )
         )

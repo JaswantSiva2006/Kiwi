@@ -6,8 +6,8 @@ This repo is a local prototype with a FastAPI backend, Vite/React frontend, Post
 
 ## New Additions
 
-- PDF and Doc Parsing + Semantic storage (Added)
-- New UI (Added)
+- PDF and Doc Parsing + Semantic storage (Added) (Branch: With_doc_ingestion)
+- New UI (Added) (Branch: With_doc_ingestion)
 
 ## Product Documents
 

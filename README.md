@@ -4,6 +4,11 @@ Kivi is a personal AI interface with persistent semantic understanding across in
 
 This repo is a local prototype with a FastAPI backend, Vite/React frontend, PostgreSQL semantic ledger, Redis short-term thread context, Ollama local models for memory work, and Sarvam for final answer generation.
 
+## New Additions
+
+- PDF and Doc Parsing + Semantic storage (Added)
+- New UI (Added)
+
 ## Product Documents
 
 - [Product Positioning](./product_positioning.md)
